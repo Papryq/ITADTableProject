@@ -1,8 +1,10 @@
 import bcryptjs from "bcryptjs";
 
 import { User } from "../models/user.model.js";
+import { generateTokenAndSetCookie } from "../utils/gerenateTokenAndSetCookie.js";
+import { sendVerificationEmail } from "../mailtrap/emails.js";
 
-//jwt in signup
+
 export const signup = async (req, res) => {
   const { email, password, name } = req.body;
 
@@ -44,6 +46,10 @@ export const signup = async (req, res) => {
     await user.save();
 
     // jwt
+    generateTokenAndSetCookie(res, user._id);
+
+    // await sendVerificationEmail(user.email, verificationToken)
+
 
     // respond if user created successfully
     res.status(201).json({
@@ -59,7 +65,6 @@ export const signup = async (req, res) => {
   }
 };
 
-// token 
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -82,10 +87,11 @@ export const login = async (req, res) => {
         .json({ success: false, message: "Invalid credentials" });
     }
 
+    // token gen in future
+    generateTokenAndSetCookie(res, user._id);
+
     // sets last login up to date
     user.lastLogin = Date.now();
-
-    // token gen in future
 
     // saves user
     await user.save();
