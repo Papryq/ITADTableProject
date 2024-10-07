@@ -1,5 +1,5 @@
-import { mailtrapClient, sender } from "./mailtrap.config.js"
-import { VERIFICATION_EMAIL_TEMPLATE } from "./emailTemplates.js"
+import { mailtrapClient, sender } from "./mailtrap.config.js";
+import { VERIFICATION_EMAIL_TEMPLATE } from "./emailTemplates.js";
 
 export const sendVerificationEmail = async (email, verificationToken) => {
   const recipient = [{ email }];
@@ -8,7 +8,7 @@ export const sendVerificationEmail = async (email, verificationToken) => {
     const response = await mailtrapClient.send({
       from: sender,
       to: recipient,
-      subject: "Verify Your Email",
+      subject: "Verify your email",
       html: VERIFICATION_EMAIL_TEMPLATE.replace(
         "{verificationCode}",
         verificationToken
@@ -31,7 +31,7 @@ export const sendWelcomeEmail = async (email, name) => {
     const response = await mailtrapClient.send({
       from: sender,
       to: recipient,
-      template_uuid: "32791ab7-0be0-45d3-a55d-9b0a8464e07f",
+      template_uuid: "999080cc-84bb-4dae-bfeb-4d7e274f30fb",
       template_variables: {
         company_info_name: "Auth Company",
         name: name,
@@ -45,3 +45,7 @@ export const sendWelcomeEmail = async (email, name) => {
     throw new Error(`Error sending welcome email: ${error}`);
   }
 };
+
+//password reset email
+
+//password reset mail success
