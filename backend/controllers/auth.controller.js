@@ -1,6 +1,7 @@
 import bcryptjs from "bcryptjs";
 
 import { User } from "../models/user.model.js";
+import { Order } from "../models/table.order.mode.js";
 import { generateTokenAndSetCookie } from "../utils/gerenateTokenAndSetCookie.js";
 import { sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/emails.js";
 
@@ -80,7 +81,7 @@ export const verifyEmail = async (req, res) => {
     user.isVerified = true;
     user.verificationToken = undefined;
     user.verificationTokenExpiresAt = undefined;
-    
+
     await user.save();
 
     await sendWelcomeEmail(user.email, user.name);
@@ -167,5 +168,60 @@ export const checkAuth = async (req, res) => {
   } catch (error) {
     console.log("Error in checkAuth", error);
     res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+export const addOrder = async (req, res) => {
+  const { orderNumber, orderDateExpiresAt,orderSystemCount, orderNotebookCount, orderStatus, orderSystemStatus, orderNotebookStatus, orderPrio, orderOperator } = req.body;
+
+  try {
+    if (!orderNumber || !orderDateExpiresAt) {
+      throw new Error("Order number or date is not specified!");
+    }
+
+    const orderAlreadyExists = await Order.findOne({ orderNumber });
+    console.log("orderAlreadyExist", orderAlreadyExists);
+
+    const order = new Order({
+      orderNumber,
+      orderSystemCount,
+      orderNotebookCount,
+      orderDateExpiresAt,
+      orderStatus,
+      orderSystemStatus,
+      orderNotebookStatus,
+      orderPrio,
+      orderOperator,
+    });
+
+    await order.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Order created successfully",
+      order: {
+        ...order._doc,
+      },
+    });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+export const deleteOrder = async (req, res) => {
+  const { orderNumber } = req.body;
+
+  try {
+    const result = await order.deleteOne({ orderNumber: orderNumber });
+    if (result.deletedCount === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Couldn't delete order" });
+    }
+
+    const updatedOrders = order.findOne();
+    return res.status(200).json({ updatedOrders });
+  } catch (error) {
+    return res.status(400).json({ success: false, error: error.message });
   }
 };
