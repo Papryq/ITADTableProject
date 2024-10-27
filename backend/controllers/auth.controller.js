@@ -155,22 +155,6 @@ export const logout = async (req, res) => {
 
 // reset password
 
-export const checkAuth = async (req, res) => {
-  try {
-    const user = await User.findById(req.userId).select("-password");
-    if (!user) {
-      return res
-        .status(400)
-        .json({ success: false, message: "User not found" });
-    }
-
-    res.status(200).json({ success: true, user });
-  } catch (error) {
-    console.log("Error in checkAuth", error);
-    res.status(400).json({ success: false, message: error.message });
-  }
-};
-
 export const addOrder = async (req, res) => {
   const {
     orderNumber,
@@ -218,6 +202,15 @@ export const addOrder = async (req, res) => {
   }
 };
 
+export const getOrders = async (req, res) => {
+  try {
+    const orders = await Order.find();
+    res.status(200).json(orders);
+  } catch {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
 export const deleteOrder = async (req, res) => {
   const { orderNumber } = req.body;
 
@@ -258,6 +251,22 @@ export const updateOrder = async (req, res) => {
       .status(200)
       .json({ success: true, message: "Order updated succcessfully" });
   } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+export const checkAuth = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select("-password");
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found" });
+    }
+
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    console.log("Error in checkAuth", error);
     res.status(400).json({ success: false, message: error.message });
   }
 };
