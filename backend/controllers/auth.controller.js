@@ -172,7 +172,17 @@ export const checkAuth = async (req, res) => {
 };
 
 export const addOrder = async (req, res) => {
-  const { orderNumber, orderDateExpiresAt,orderSystemCount, orderNotebookCount, orderStatus, orderSystemStatus, orderNotebookStatus, orderPrio, orderOperator } = req.body;
+  const {
+    orderNumber,
+    orderDateExpiresAt,
+    orderSystemCount,
+    orderNotebookCount,
+    orderStatus,
+    orderSystemStatus,
+    orderNotebookStatus,
+    orderPrio,
+    orderOperator,
+  } = req.body;
 
   try {
     if (!orderNumber || !orderDateExpiresAt) {
@@ -212,16 +222,42 @@ export const deleteOrder = async (req, res) => {
   const { orderNumber } = req.body;
 
   try {
-    const result = await order.deleteOne({ orderNumber: orderNumber });
+    const result = await Order.deleteOne({ orderNumber: orderNumber });
     if (result.deletedCount === 0) {
       return res
         .status(400)
         .json({ success: false, message: "Couldn't delete order" });
     }
 
-    const updatedOrders = order.findOne();
-    return res.status(200).json({ updatedOrders });
+    // const updatedOrders = Order.findOne();
+    return res
+      .status(200)
+      .json({ success: true, message: "Order deleted successfully" });
   } catch (error) {
     return res.status(400).json({ success: false, error: error.message });
+  }
+};
+
+export const updateOrder = async (req, res) => {
+  const { orderNumber, ...updateOrder } = req.body;
+
+  try {
+    const updatedOrder = await Order.findOneAndUpdate(
+      { orderNumber: orderNumber },
+      updateOrder,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedOrder) {
+      return res
+        .status(400)
+        .json({ success: false, message: "No such order to update" });
+    }
+
+    res
+      .status(200)
+      .json({ success: true, message: "Order updated succcessfully" });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
   }
 };
