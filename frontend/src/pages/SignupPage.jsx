@@ -1,30 +1,27 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, Lock } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Mail, Lock, User } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 
+import { useAuthStore } from "../store/authStore.js"
+import PasswordStrengthMeter from "../components/PasswordStrengthMeter.jsx"
 import loginImage from "../assets/loginLogo.png";
 import Input from "../components/Input";
-import minion from "../assets/minionek.png";
 
-const LoginPage = () => {
-  const [email, setEmail] = useState("");
+const SignupPage = () => {
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const { signup, error, isLoading } = useAuthStore();
+  const navigate = useNavigate()
 
-  const handleLogin = (e) => {
-    e.preventDeafult();
-  };
+
+  // handler to signup and navigate to verify email if everything went fine
+  const handleSignup = (e) => {
+    e.preventDefault();
+  }
 
   return (
-    <>
-      <motion.img
-        src={minion}
-        className="rounded-full w-64 h-64 fixed top-1/3 left-[38rem] shadow-2xl shadow-yellow-500 backdrop-blur-3xl"
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5, delay: 0.5 }}
-      />
-
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -36,9 +33,17 @@ const LoginPage = () => {
             <img src={loginImage} className=" w-48 h-24" />
           </div>
           <div className="border-t-2 border-t-teal-500"></div>
-          <h2 className="p-4 text-3xl text-center">LOGIN</h2>
+          <h2 className="p-4 text-3xl text-center">Signup</h2>
 
-          <forn onSubmit={handleLogin}>
+          <forn onSubmit={handleSignup}>
+            <Input 
+              icon={User}
+              type="text"
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              />
+
             <Input
               icon={Mail}
               type="email"
@@ -55,31 +60,24 @@ const LoginPage = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
 
-            <div className="flex items-center -mt-8 mb-48">
-              <Link
-                to="/forgot-password"
-                className="text-sm text-teal-400 hover:underline"
-              >
-                Forgot Password?
-              </Link>
-            </div>
+            {error && <p className="text-red-500 font-semibold">{error}</p>}
+            <PasswordStrengthMeter password={password}/>
+
           </forn>
         </div>
         <div className="px-8 py-4 bg-slate-50 bg-opacity-50 flex justify-center">
           <p className="text-sm text-gray-400">
-            Don`t have an account?{"  "}
+          Already have an account?{"  "}
             <Link
-              to="/signup"
+              to="/login"
               className="text-teal-700 hover:underline hover:text-teal-300"
             >
-              Signup
+              Login
             </Link>
-            &nbsp;now!
           </p>
         </div>
       </motion.div>
-    </>
   );
 };
 
-export default LoginPage;
+export default SignupPage;
