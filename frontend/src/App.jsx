@@ -4,11 +4,15 @@ import FloatingImage from "./components/FloatingImage"
 import FloatingShape from "./components/FloatingShape"
 import LoginPage from "./pages/LoginPage"
 import SignupPage from "./pages/SignupPage"
+import Navbar from "./components/Navbar"
+import ForgotPasswordPage from "./pages/ForgotPasswordPage"
+import EmailVerificationPage from "./pages/EmailVerificationPage"
 
 function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-teal-400 from-40% via-slate-200 to-slate-50 flex items-center justify-center relative overflow-hidden">
+      <Navbar />
       <FloatingShape
         
         color="bg-teal-500"
@@ -38,6 +42,10 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
 
         <Route path="/signup" element={<SignupPage />} />
+
+        <Route path="forgot-password" element={<ForgotPasswordPage />} />
+
+        <Route path="verify-email" element={<EmailVerificationPage />} />
       </Routes>
     </div>
   )
