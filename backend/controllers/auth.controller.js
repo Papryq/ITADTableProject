@@ -281,10 +281,10 @@ export const getOrders = async (req, res) => {
 };
 
 export const deleteOrder = async (req, res) => {
-  const { orderNumber } = req.body;
+  const { orderNumber } = req.params;
 
   try {
-    const result = await Order.deleteOne({ orderNumber: orderNumber });
+    const result = await Order.deleteOne({ orderNumber });
     if (result.deletedCount === 0) {
       return res
         .status(400)
@@ -301,7 +301,8 @@ export const deleteOrder = async (req, res) => {
 };
 
 export const updateOrder = async (req, res) => {
-  const { orderNumber, ...updateOrder } = req.body;
+  const { orderNumber } = req.params
+  const updateOrder = req.body;
 
   try {
     const updatedOrder = await Order.findOneAndUpdate(

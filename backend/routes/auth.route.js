@@ -24,9 +24,9 @@ router.post("/logout", logout);
 router.post("/verify-email", verifyEmail);
 router.post("/orders", addOrder);
 
-router.delete("/orders", deleteOrder);
+router.delete("/orders/:orderNumber", deleteOrder);
 
-router.put("/orders", updateOrder);
+router.put("/orders/:orderNumber", updateOrder);
 
 
 export default router;

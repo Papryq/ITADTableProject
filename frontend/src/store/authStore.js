@@ -10,11 +10,31 @@ axios.defaults.withCredentials = true;
 
 export const useAuthStore = create((set) => ({
   user: null,
+  orders: [],
   isAuthenticated: false,
   error: null,
   isLoading: false,
   isCheckingAuth: true,
   message: null,
+
+  fetchOrders: async () => {
+    set({ isLoading: true, error: null });
+
+    try {
+      const response = await axios.get(`${API_URL}/orders/`);
+      set({
+        orders: response.data,
+        isLoading: false,
+      });
+      return response.data.order; // Zwracamy dane zamówienia, jeśli jest potrzebne
+    } catch (error) {
+      set({
+        error: error.response?.data?.message || "Error fetching order",
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
 
   signup: async (email, password, name) => {
     set({ isLoading: true, error: null });
@@ -141,5 +161,81 @@ export const useAuthStore = create((set) => ({
       throw error;
     }
   },
-  
+
+  addOrder: async (
+    orderNumber,
+    orderSystemCount,
+    orderNotebookCount,
+    orderDateExpiresAt,
+    orderStatus,
+    orderSystemStatus,
+    orderNotebookStatus,
+    orderPrio,
+    orderOperator
+  ) => {
+    set({ isLoading: true, error: null });
+
+    try {
+      const response = await axios.post(`${API_URL}/orders`, {
+        orderNumber,
+        orderSystemCount,
+        orderNotebookCount,
+        orderDateExpiresAt,
+        orderStatus,
+        orderSystemStatus,
+        orderNotebookStatus,
+        orderPrio,
+        orderOperator,
+      });
+      set({
+        order: response.data.order,
+        isLoading: false,
+      });
+    } catch (error) {
+      set({
+        error: error.response?.data?.message || "Error adding order",
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
+
+  deleteOrder: async (orderNumber) => {
+    set({ isLoading: true, error: null });
+
+    try {
+      await axios.delete(`${API_URL}/orders/${orderNumber}`);
+      set({
+        order: null,
+        isLoading: false,
+      });
+    } catch (error) {
+      set({
+        error: error.response?.data?.message || "Error deleting order",
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
+
+  updateOrder: async (orderNumber, updateData) => {
+    set({ isLoading: true, error: null });
+
+    try {
+      const response = await axios.put(
+        `${API_URL}/orders/${orderNumber}`,
+        updateData
+      );
+      set({
+        order: response.data.order,
+        isLoading: false,
+      });
+    } catch (error) {
+      set({
+        error: error.response?.data?.message || "Error updating order",
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
 }));

@@ -7,6 +7,7 @@ import SignupPage from "./pages/SignupPage"
 import Navbar from "./components/Navbar"
 import ForgotPasswordPage from "./pages/ForgotPasswordPage"
 import EmailVerificationPage from "./pages/EmailVerificationPage"
+import DashboardPage from "./pages/DashboardPage"
 
 function App() {
 
@@ -39,6 +40,8 @@ function App() {
       />
 
       <Routes>
+        <Route path="/" element={<DashboardPage />} />
+
         <Route path="/login" element={<LoginPage />} />
 
         <Route path="/signup" element={<SignupPage />} />
