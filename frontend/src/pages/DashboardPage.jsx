@@ -8,7 +8,6 @@ import OrderTable from "../components/OrderTable";
 const DashboardPage = () => {
   const { fetchOrders, orders, isLoading, error } = useAuthStore();
 
-
   useEffect(() => {
     fetchOrders();
   }, [fetchOrders]);

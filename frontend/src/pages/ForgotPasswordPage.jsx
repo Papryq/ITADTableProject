@@ -13,7 +13,7 @@ const ForgotPasswordPage = () => {
   const { isLoading, forgotPassword } = useAuthStore();
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     await forgotPassword(email);
     setIsSubmitted(true);
   };
@@ -76,11 +76,13 @@ const ForgotPasswordPage = () => {
       </div>
 
       <div className="px-8 py-4 bg-gray-900 bg-opacity-50 flex justify-center">
-        <Link to={"/login"} className="text-sm text-teal-400 hover:underline flex items-center">
-          <ArrowLeft className="h-4 w-4 mr-2"/> Back to login
+        <Link
+          to={"/login"}
+          className="text-sm text-teal-400 hover:underline flex items-center"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" /> Back to login
         </Link>
       </div>
-
     </motion.div>
   );
 };

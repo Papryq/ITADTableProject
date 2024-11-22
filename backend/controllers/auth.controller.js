@@ -3,7 +3,12 @@ import bcryptjs from "bcryptjs";
 import { User } from "../models/user.model.js";
 import { Order } from "../models/table.order.mode.js";
 import { generateTokenAndSetCookie } from "../utils/gerenateTokenAndSetCookie.js";
-import { sendVerificationEmail, sendWelcomeEmail, sendPasswordResetEmail, sendResetSuccessEmail } from "../mailtrap/emails.js";
+import {
+  sendVerificationEmail,
+  sendWelcomeEmail,
+  sendPasswordResetEmail,
+  sendResetSuccessEmail,
+} from "../mailtrap/emails.js";
 
 export const signup = async (req, res) => {
   const { email, password, name } = req.body;
@@ -177,12 +182,10 @@ export const forgotPassword = async (req, res) => {
       `${process.env.CLIENT_URL}/reset-password/${resetToken}`
     );
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Password reset link send to your email",
-      });
+    res.status(200).json({
+      success: true,
+      message: "Password reset link send to your email",
+    });
   } catch (error) {
     console.log("Error in forgotPassword", error);
     res.status(400).json({ success: false, message: error.message });
@@ -301,7 +304,7 @@ export const deleteOrder = async (req, res) => {
 };
 
 export const updateOrder = async (req, res) => {
-  const { orderNumber } = req.params
+  const { orderNumber } = req.params;
   const updateOrder = req.body;
 
   try {

@@ -17,7 +17,6 @@ const ModalOrder = () => {
   const { addOrder, isLoading, error } = useAuthStore();
 
   const handleSubmit = async (e) => {
-
     try {
       await addOrder(
         orderNumber,

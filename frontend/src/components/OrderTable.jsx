@@ -45,10 +45,16 @@ const OrderTable = () => {
                       {formatDate(order.orderDateExpiresAt)}
                     </td>
                     <td className="pl-6 pr-2">
-                      <img src={tick} className="border-2 border-black w-8 h-8 rounded-lg" />
+                      <img
+                        src={tick}
+                        className="border-2 border-black w-8 h-8 rounded-lg"
+                      />
                     </td>
                     <td className="">
-                    <img src={tick} className="border-2 border-black w-8 h-8 rounded-lg" />
+                      <img
+                        src={tick}
+                        className="border-2 border-black w-8 h-8 rounded-lg"
+                      />
                     </td>
                     <td className="py-4 px-16">
                       <select id="options">
