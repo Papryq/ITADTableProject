@@ -17,11 +17,11 @@ const orderSchema = new mongoose.Schema(
     },
     orderDateExpiresAt: {
       type: Date,
-      required: true,
+      required: false,
     },
     orderStatus: {
-      type: String,
-      default: ""
+      type: Boolean,
+      default: false
     },
     orderSystemStatus: {
       type: Boolean,
