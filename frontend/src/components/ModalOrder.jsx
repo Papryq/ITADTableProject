@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { useAuthStore } from "../store/authStore.js";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
+import { motion } from "framer-motion";
 
-import Input from "./Input.jsx";
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import { useAuthStore } from "../store/authStore.js";
 import { Mail } from "lucide-react";
+import Input from "./Input.jsx";
 
 const ModalOrder = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,25 +37,33 @@ const ModalOrder = () => {
   return (
     <div className="relative">
       {/* Przycisk otwierający modal */}
-      <button
+      <motion.button
+        whileHover={{ scale: 1.2 }}
         onClick={toggleModal}
-        className="px-2 py-1 mb-2 rounded-full text-3xl text-black"
+        className="px-2 rounded-full text-2xl text-black hover:text-white"
       >
         +
-      </button>
+      </motion.button>
+    
 
       {/* Modal */}
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-8">
+          <motion.div
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="bg-gradient-to-r from-slate-50 from-40% via-slame-400 to-teal-400 rounded-lg max-w-md w-full p-8"
+          >
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold">Add new order</h2>
-              <button
+              <h2 className="text-lg font-semibold text-gray-800">Add new order</h2>
+              <motion.button
+                whileHover={{ scale: 1.2 }}
                 onClick={toggleModal}
-                className="text-gray-500 hover:text-gray-800"
+                className="text-gray-500 hover:text-gray-800 text-2xl"
               >
                 ×
-              </button>
+              </motion.button>
             </div>
 
             <form onSubmit={handleSubmit}>
@@ -96,22 +106,16 @@ const ModalOrder = () => {
 
               {/* Przyciski */}
               <div className="flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={toggleModal}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
-                >
-                  Anuluj
-                </button>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  className="px-3 py-2 bg-white text-teal-500 rounded-lg shadow-xl border-2 border-teal-400"
                 >
-                  Wyślij
-                </button>
+                  Dodaj
+                </motion.button>
               </div>
             </form>
-          </div>
+          </motion.div>
         </div>
       )}
     </div>

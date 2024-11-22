@@ -2,9 +2,10 @@ import { Routes, Route } from "react-router-dom";
 
 import FloatingImage from "./components/FloatingImage";
 import FloatingShape from "./components/FloatingShape";
+import Navbar from "./components/Navbar";
+
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
-import Navbar from "./components/Navbar";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
 import DashboardPage from "./pages/DashboardPage";

@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+
 import minion from "../assets/minionek.png";
 
 const FloatingImage = ({ size, top, left, delay }) => {

@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Mail, Lock, Loader } from "lucide-react";
-import { Link } from "react-router-dom";
 
+import { useAuthStore } from "../store/authStore";
 import loginImage from "../assets/loginLogo.png";
 import Input from "../components/Input";
-import minion from "../assets/minionek.png";
-import { useAuthStore } from "../store/authStore";
+import minion from "../assets/auraminon.png";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -23,7 +23,7 @@ const LoginPage = () => {
     <>
       <motion.img
         src={minion}
-        className="rounded-full w-64 h-64 fixed top-1/3 left-[38rem] shadow-2xl shadow-yellow-500 backdrop-blur-3xl max-xl:invisible"
+        className="rounded-full fixed top-1/4 left-[33rem] max-xl:invisible"
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5, delay: 0.5 }}

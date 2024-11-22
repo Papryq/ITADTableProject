@@ -1,5 +1,5 @@
-import React from "react";
 import { useEffect } from "react";
+import { motion } from "framer-motion";
 import dayjs from "dayjs";
 
 import { useAuthStore } from "../store/authStore";
@@ -23,8 +23,13 @@ const OrderTable = () => {
         <p>Error: {error}</p>
       ) : orders && orders.length > 0 ? ( // Upewnij się, że orders nie jest pustą tablicą
         <ul>
-          {orders.map((order) => (
-            <div key={order.orderNumber}>
+          {orders.map((order, index) => (
+            <motion.div
+              key={order.orderNumber}
+              initial={{ opacity: 0, x: -120 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.05 }}
+            >
               <table className="table-auto bg-white w-full mx-auto border-2 border-black">
                 <tbody>
                   <tr>
@@ -32,7 +37,7 @@ const OrderTable = () => {
                       <button className="border-2 border-black w-8 h-8 rounded-lg" />{" "}
                     </td>
                     <td>
-                      <img src={fire} className="w-8 h-8" />
+                      <img src={fire} className="w-8 h-8 " />
                     </td>
                     <td className="py-4 pr-4">{order.orderNumber}</td>
                     <td className="py-4 px-16">{order.orderStatus}</td>
@@ -56,7 +61,7 @@ const OrderTable = () => {
                         className="border-2 border-black w-8 h-8 rounded-lg"
                       />
                     </td>
-                    <td className="py-4 px-16">
+                    <td className="py-4 pl-4 pr-16">
                       <select id="options">
                         <option>--</option>
                         <option value="abc">ABC</option>
@@ -72,7 +77,7 @@ const OrderTable = () => {
                   </tr>
                 </tbody>
               </table>
-            </div>
+            </motion.div>
           ))}
         </ul>
       ) : (

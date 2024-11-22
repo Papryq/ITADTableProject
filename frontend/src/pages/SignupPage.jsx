@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Mail, Lock, User, Loader } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
 
 import { useAuthStore } from "../store/authStore.js";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter.jsx";
