@@ -169,8 +169,6 @@ export const useAuthStore = create((set) => ({
     orderNotebookCount,
     orderDateExpiresAt,
     orderStatus,
-    orderSystemStatus,
-    orderNotebookStatus,
     orderPrio,
     orderOperator
   ) => {
@@ -183,8 +181,6 @@ export const useAuthStore = create((set) => ({
         orderNotebookCount,
         orderDateExpiresAt,
         orderStatus,
-        orderSystemStatus,
-        orderNotebookStatus,
         orderPrio,
         orderOperator,
       });

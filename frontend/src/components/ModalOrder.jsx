@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { motion } from "framer-motion";
+import { Loader, Mail } from "lucide-react";
+import dayjs from "dayjs";
 
-import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useAuthStore } from "../store/authStore.js";
-import { Mail } from "lucide-react";
 import Input from "./Input.jsx";
 
 const ModalOrder = () => {
@@ -13,21 +13,23 @@ const ModalOrder = () => {
   const [orderNotebookCount, setOrderNotebookCount] = useState("");
   const [orderSystemCount, setOrderSystemCount] = useState("");
   const [orderDateExpiresAt, setOrderDateExpiresAt] = useState(null);
-  const [orderPrio, setOrderPrio] = useState(false);
-  const [orderOperator, setOrderOperator] = useState("");
 
   const { addOrder, isLoading, error } = useAuthStore();
 
   const handleSubmit = async (e) => {
     try {
+      const formattedDate = orderDateExpiresAt
+        ? dayjs(orderDateExpiresAt).format('YYYY-MM-DD') // Changes to "YYYY-MM-DD"
+        : null;
+  
       await addOrder(
         orderNumber,
         orderNotebookCount,
         orderSystemCount,
-        orderDateExpiresAt,
-        orderPrio,
-        orderOperator
+        formattedDate
       );
+  
+      console.log("Formatted Date:", formattedDate); // To be deleted
     } catch (error) {
       console.log(error);
     }
@@ -36,7 +38,6 @@ const ModalOrder = () => {
   const toggleModal = () => setIsOpen(!isOpen);
   return (
     <div className="relative">
-      {/* Przycisk otwierający modal */}
       <motion.button
         whileHover={{ scale: 1.2 }}
         onClick={toggleModal}
@@ -44,7 +45,6 @@ const ModalOrder = () => {
       >
         +
       </motion.button>
-    
 
       {/* Modal */}
       {isOpen && (
@@ -56,7 +56,9 @@ const ModalOrder = () => {
             className="bg-gradient-to-r from-slate-50 from-40% via-slame-400 to-teal-400 rounded-lg max-w-md w-full p-8"
           >
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold text-gray-800">Add new order</h2>
+              <h2 className="text-lg font-semibold text-gray-800">
+                Add new order
+              </h2>
               <motion.button
                 whileHover={{ scale: 1.2 }}
                 onClick={toggleModal}
@@ -104,14 +106,17 @@ const ModalOrder = () => {
                 />
               </div>
 
-              {/* Przyciski */}
               <div className="flex justify-end gap-2">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   type="submit"
                   className="px-3 py-2 bg-white text-teal-500 rounded-lg shadow-xl border-2 border-teal-400"
                 >
-                  Dodaj
+                  {isLoading ? (
+                    <Loader className="w-6 h-6 animate-spin mx-auto" />
+                  ) : (
+                    "Add Order"
+                  )}
                 </motion.button>
               </div>
             </form>
