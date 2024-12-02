@@ -6,7 +6,7 @@ import home from "../assets/home.png";
 
 const Navbar = () => {
   return (
-    <div className="fixed top-0 bg-teal-100 w-full h-20 flex border-b-2 border-b-black">
+    <nav className="fixed top-0 bg-teal-100 w-full h-20 flex border-b-2 border-b-black">
       <div className="flex justify-between w-1/2">
         <Link to="/">
           <motion.img
@@ -21,7 +21,7 @@ const Navbar = () => {
       <div className="bg-gradient-to-r from-teal-900 to-teal-400 w-1/2">
         <div className="w-20 h-20  rounded-full"></div>
       </div>
-    </div>
+    </nav>
   );
 };
 
