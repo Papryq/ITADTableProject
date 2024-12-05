@@ -206,6 +206,7 @@ export const useAuthStore = create((set) => ({
         order: null,
         isLoading: false,
       });
+      console.log(`Deleted order with number: ${orderNumber}`)
     } catch (error) {
       set({
         error: error.response?.data?.message || "Error deleting order",
