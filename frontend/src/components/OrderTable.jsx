@@ -60,7 +60,7 @@ const OrderTable = () => {
                 >
                   <div className="flex flex-col 2xl:flex-row lg:flex-row md:flex-col bg-white w-full mx-auto border-2 border-slate-200 p-4">
                     {/* Kolumna dla Order Number */}
-                    <div className="flex-1 mb-1 md:mb-0 gap-1">
+                    <div className="flex lg:flex-1 mb-1 md:mb-0 gap-1">
                       <span className="font-bold flex lg:hidden">Order number: </span> {order.orderNumber}
                     </div>
 
@@ -69,12 +69,12 @@ const OrderTable = () => {
                     </div>
 
                     {/* Kolumna dla Status */}
-                    <div className="flex-1 mb-1 md:mb-0 gap-1">
+                    <div className="flex lg:flex-1 mb-2 md:mb-0 gap-1">
                       <span className="font-bold flex lg:hidden">Order Status:</span> {order.orderStatus}
                     </div>
 
                     {/* Kolumna dla Notebook Status */}
-                    <div className="flex-1 mb-1 md:mb-0 -p-2">
+                    <div className="flex lg:flex-1 mb-2 md:mb-0 -p-2">
                       <span className="font-bold mr-1 flex lg:hidden">Amounts:</span>
                       <span className="p-2 bg-green-500 rounded-lg font-bold">
                         {notebookStatus}/{order.orderSystemCount}
@@ -82,13 +82,13 @@ const OrderTable = () => {
                     </div>
 
                     {/* Kolumna dla Expires */}
-                    <div className="flex-1 mb-1 md:mb-0 gap-1">
+                    <div className="flex lg:flex-1 mb-2 md:mb-0 gap-1">
                       <span className="font-bold flex lg:hidden">Expire Date:</span>{" "}
                       {formatDate(order.orderDateExpiresAt)}
                     </div>
 
                     {/* Kolumna dla Tick Click */}
-                    <div className="flex lg:flex-1 mb-1 md:mb-0 items-start justify-start lg:items-center lg:justify-center">
+                    <div className="flex lg:flex mb-1 md:mb-0 items-start justify-start lg:items-center lg:justify-center">
                       <div
                         onClick={() =>
                           handleTickClick(
