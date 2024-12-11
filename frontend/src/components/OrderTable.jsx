@@ -93,10 +93,7 @@ const OrderTable = () => {
                   >
                     {/* Order Number */}
                     <div className="flex-1 mb-1 md:mb-0 gap-1">
-                      <span className="font-bold flex-1 lg:hidden">
-                        Order number:{" "}
-                      </span>{" "}
-                      {order.orderNumber}
+                      <span className="font-bold flex lg:hidden">Order number: </span> {order.orderNumber}
                     </div>
 
                     <div
@@ -107,19 +104,14 @@ const OrderTable = () => {
                       <img src={fire} className="hidden lg:flex" />
                     </div>
 
-                    {/* Status */}
+                    {/* Kolumna dla Status */}
                     <div className="flex-1 mb-1 md:mb-0 gap-1">
-                      <span className="font-bold flex-1 lg:hidden">
-                        Order Status:
-                      </span>{" "}
-                      {order.orderStatus}
+                      <span className="font-bold flex lg:hidden">Order Status:</span> {order.orderStatus}
                     </div>
 
-                    {/* Notebook Status */}
+                    {/* Kolumna dla Notebook Status */}
                     <div className="flex-1 mb-1 md:mb-0 -p-2">
-                      <span className="font-bold mr-1 flex-1 lg:hidden">
-                        Amounts:
-                      </span>
+                      <span className="font-bold mr-1 flex lg:hidden">Amounts:</span>
                       <span className="p-2 bg-green-500 rounded-lg font-bold">
                         {notebookStatus}/{systemStatus}
                       </span>
@@ -133,7 +125,7 @@ const OrderTable = () => {
                       {formatDate(order.orderDateExpiresAt)}
                     </div>
 
-                    {/* Tick Click */}
+                    {/* Kolumna dla Tick Click */}
                     <div className="flex lg:flex-1 mb-1 md:mb-0 items-start justify-start lg:items-center lg:justify-center">
                       <div
                         onClick={() =>
