@@ -165,6 +165,7 @@ export const useAuthStore = create((set) => ({
 
   addOrder: async (
     orderNumber,
+    orderLockStatus,
     orderSystemCount,
     orderNotebookCount,
     orderDateExpiresAt,
@@ -177,6 +178,7 @@ export const useAuthStore = create((set) => ({
     try {
       const response = await axios.post(`${API_URL}/orders`, {
         orderNumber,
+        orderLockStatus,
         orderSystemCount,
         orderNotebookCount,
         orderDateExpiresAt,
@@ -224,6 +226,8 @@ export const useAuthStore = create((set) => ({
         `${API_URL}/orders/${orderNumber}`,
         updateData
       );
+      console.log("Sending updateData to backend:", updateData);
+
       set({
         order: response.data.order,
         isLoading: false,

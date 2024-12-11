@@ -3,7 +3,7 @@ import { useState } from "react";
 const useHandleTickClick = (statusKey, countKey) => {
   const [updatedOrders, setUpdatedOrders] = useState({});
 
-  const handleTickClick = (orderNumber, defaultCount) => {
+  const handleTickClick = async (orderNumber, defaultCount) => {
     setUpdatedOrders((prev) => {
       const isTickCurrentlyVisible = prev[orderNumber]?.[`${statusKey}TickVisible`] || false;
 

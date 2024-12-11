@@ -6,6 +6,10 @@ const orderSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  orderLockStatus: {
+    type: Boolean,
+    default: false
+  },
   orderSystemCount: {
     type: Number,
     required: false,

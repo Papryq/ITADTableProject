@@ -9,7 +9,23 @@ import fire from "../assets/fire.png";
 import tick from "../assets/tick.png";
 
 const OrderTable = () => {
-  const { fetchOrders, deleteOrder, orders, isLoading, error } = useAuthStore();
+  const { fetchOrders, deleteOrder, updateOrder, orders, isLoading, error } = useAuthStore();
+  const [lockStatus, setLockStatus] = useState({});
+
+  const handleLockStatusChange = async (orderNumber, currentStatus) => {
+    try {
+      const newStatus = !currentStatus;
+      await updateOrder(orderNumber, {orderLockStatus: newStatus});
+      setLockStatus((prev) => ({
+        ...prev,
+        [orderNumber]: newStatus,
+      }));
+      console.log("Change color to")
+    } catch (error) {
+      console.log("Failed to update lockStatus", error);
+    }
+  };
+
   const {
     updatedOrders: notebookOrders,
     handleTickClick: handleNotebookTickClick,
@@ -21,9 +37,11 @@ const OrderTable = () => {
   } = useHandleTickClick("systemStatus", "orderSystemCount");
   const formatDate = (date) => dayjs(date).format("DD/MM/YYYY");
 
+
   useEffect(() => {
     fetchOrders();
   }, []);
+
 
   const handleDelete = async (orderNumber) => {
     await deleteOrder(orderNumber);
@@ -34,7 +52,7 @@ const OrderTable = () => {
   return (
     <div className="max-h-[26rem] lg:max-h-[48rem] w-full lg:w-1/2 overflow-y-auto scrollbar-hide mt-24 lg:mt-0">
       <ModalOrder />
-      <div className="border-2 border-gray-300 rounded-lg shadow-md scrollbar-hide">
+      <div className="border-2 border-white rounded-lg shadow-md scrollbar-hide">
         {isLoading ? (
           <p>Loading orders...</p>
         ) : error ? (
@@ -42,6 +60,10 @@ const OrderTable = () => {
         ) : orders && orders.length > 0 ? (
           <ul>
             {orders.map((order, index) => {
+              const isLocked =
+                lockStatus[order.orderNumber] ?? order.orderLockStatus
+                console.log(order.orderNumber, isLocked);
+
               const notebookTickVisible =
                 notebookOrders[order.orderNumber]?.notebookStatusTickVisible ||
                 false;
@@ -59,11 +81,16 @@ const OrderTable = () => {
               return (
                 <motion.div
                   key={order.orderNumber}
+                  layout
                   initial={{ opacity: 0, x: -120 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.05 }}
                 >
-                  <div className="flex flex-col 2xl:flex-row lg:flex-row md:flex-col bg-white w-full mx-auto border-2 border-slate-200 p-4">
+                  <div
+                    className={`flex flex-col 2xl:flex-row lg:flex-row md:flex-col  rounded-lg w-full mx-auto border-2 p-4  ${
+                      isLocked ? "bg-slate-400 border-slate-600" : "bg-white"
+                    }`}
+                  >
                     {/* Order Number */}
                     <div className="flex-1 mb-1 md:mb-0 gap-1">
                       <span className="font-bold flex-1 lg:hidden">
@@ -72,7 +99,11 @@ const OrderTable = () => {
                       {order.orderNumber}
                     </div>
 
-                    <div>
+                    <div
+                      onClick={() =>
+                        handleLockStatusChange(order.orderNumber, isLocked)
+                      }
+                    >
                       <img src={fire} className="hidden lg:flex" />
                     </div>
 
@@ -95,7 +126,7 @@ const OrderTable = () => {
                     </div>
 
                     {/* Expires Date */}
-                    <div className="flex-1 mb-1 md:mb-0 gap-1">
+                    <div className="flex-1 mb-1 md:mb-0 gap-1 mx-2">
                       <span className="font-bold flex-1 lg:hidden">
                         Expire Date:
                       </span>{" "}

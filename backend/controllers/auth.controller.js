@@ -230,6 +230,7 @@ export const resetPassword = async (req, res) => {
 export const addOrder = async (req, res) => {
   const {
     orderNumber,
+    orderLockStatus,
     orderDateExpiresAt,
     orderSystemCount,
     orderNotebookCount,
