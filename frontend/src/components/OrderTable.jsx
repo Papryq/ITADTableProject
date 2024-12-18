@@ -7,22 +7,56 @@ import useHandleTickClick from "../hooks/useHandleTickClick";
 import { useAuthStore } from "../store/authStore";
 import fire from "../assets/fire.png";
 import tick from "../assets/tick.png";
+import locker from "../assets/lock2.png";
+import exclamation from "../assets/exclamation2.png";
+import exclamationOff from "../assets/exclamationOff.png"
 
 const OrderTable = () => {
-  const { fetchOrders, deleteOrder, updateOrder, orders, isLoading, error } = useAuthStore();
+  const { fetchOrders, deleteOrder, updateOrder, orders, isLoading, error } =
+    useAuthStore();
   const [lockStatus, setLockStatus] = useState({});
+  const [prioStatus, setPrioStatus] = useState({});
+  const [deadlineStatus, setDeadlineStatus] = useState({});
 
   const handleLockStatusChange = async (orderNumber, currentStatus) => {
     try {
       const newStatus = !currentStatus;
-      await updateOrder(orderNumber, {orderLockStatus: newStatus});
+      await updateOrder(orderNumber, { orderLockStatus: newStatus });
       setLockStatus((prev) => ({
         ...prev,
         [orderNumber]: newStatus,
       }));
-      console.log("Change color to")
+      console.log("Change color to");
     } catch (error) {
       console.log("Failed to update lockStatus", error);
+    }
+  };
+
+  const handlePrioStatusChange = async (orderNumber, currentStatus) => {
+    try {
+      const newStatus = !currentStatus;
+      await updateOrder(orderNumber, { orderPrio: newStatus });
+      setPrioStatus((prev) => ({
+        ...prev,
+        [orderNumber]: newStatus,
+      }));
+      console.log("Prio Status Changed");
+    } catch (error) {
+      console.log("Failed to update prioStatus");
+    }
+  };
+
+  const handleDeadlineChange = async (orderNumber, currentStatus) => {
+    try {
+      const newStatus = !currentStatus;
+      await updateOrder(orderNumber, { orderDeadline: newStatus });
+      setDeadlineStatus((prev) => ({
+        ...prev,
+        [orderNumber]: newStatus,
+      }));
+      console.log("Deadline Status Changed");
+    } catch (error) {
+      console.log("Failed to update DeadlineStatus");
     }
   };
 
@@ -37,11 +71,9 @@ const OrderTable = () => {
   } = useHandleTickClick("systemStatus", "orderSystemCount");
   const formatDate = (date) => dayjs(date).format("DD/MM/YYYY");
 
-
   useEffect(() => {
     fetchOrders();
   }, []);
-
 
   const handleDelete = async (orderNumber) => {
     await deleteOrder(orderNumber);
@@ -52,7 +84,7 @@ const OrderTable = () => {
   return (
     <div className="max-h-[26rem] lg:max-h-[48rem] w-full lg:w-1/2 overflow-y-auto scrollbar-hide mt-24 lg:mt-0">
       <ModalOrder />
-      <div className="border-2 border-white rounded-lg shadow-md scrollbar-hide">
+      <div className="border-2 border-white shadow-md scrollbar-hide">
         {isLoading ? (
           <p>Loading orders...</p>
         ) : error ? (
@@ -61,8 +93,15 @@ const OrderTable = () => {
           <ul>
             {orders.map((order, index) => {
               const isLocked =
-                lockStatus[order.orderNumber] ?? order.orderLockStatus
-                console.log(order.orderNumber, isLocked);
+                lockStatus[order.orderNumber] ?? order.orderLockStatus;
+              console.log(order.orderNumber, isLocked);
+
+              const isPrio = prioStatus[order.orderNumber] ?? order.orderPrio;
+              console.log(order.orderNumber, isPrio, "Prio");
+
+              const isDeadline =
+                deadlineStatus[order.orderNumber] ?? order.orderDeadline;
+              console.log(order.orderNumber, isDeadline, "Deadline");
 
               const notebookTickVisible =
                 notebookOrders[order.orderNumber]?.notebookStatusTickVisible ||
@@ -79,6 +118,7 @@ const OrderTable = () => {
                 order.orderSystemCount;
 
               return (
+
                 <motion.div
                   key={order.orderNumber}
                   layout
@@ -87,38 +127,60 @@ const OrderTable = () => {
                   transition={{ duration: 0.5, delay: index * 0.05 }}
                 >
                   <div
-                    className={`flex flex-col 2xl:flex-row lg:flex-row md:flex-col  rounded-lg w-full mx-auto border-2 p-4  ${
-                      isLocked ? "bg-slate-400 border-slate-600" : "bg-white"
+                    className={`flex flex-col 2xl:flex-row lg:flex-row md:flex-col w-full mx-auto border-2 p-4 ${isDeadline ? "border-red-500 border-4" : "border-white"}  ${
+                      isLocked ? "bg-slate-400" : "bg-white"
                     }`}
                   >
-                    {/* Order Number */}
-                    <div className="flex-1 mb-1 md:mb-0 gap-1">
-                      <span className="font-bold flex lg:hidden">Order number: </span> {order.orderNumber}
-                    </div>
-
-                    <div
+                    {/* Order Deadline */}
+                    <span className="font-bold mr-1 lg:hidden">Deadline:</span>
+                    <motion.div
+                      className="flex-1 mr-4 lg:mr-0 cursor-pointer mb-2 lg:mb-0"
+                      whileHover={{ scale: 1.2 }}
                       onClick={() =>
-                        handleLockStatusChange(order.orderNumber, isLocked)
+                        handleDeadlineChange(order.orderNumber, isDeadline)
                       }
                     >
-                      <img src={fire} className="hidden lg:flex" />
+                      {isDeadline === true ? <img src={exclamation} className="flex" /> : <img src={exclamationOff} className="flex" />}
+                    </motion.div>
+
+
+                    {/* Order Number */}
+                    <div className="flex-1 mb-1 md:mb-0 gap-1">
+                      <span className="font-bold flex-1 lg:hidden">
+                        Order number:{" "}
+                      </span>{" "}
+                      {order.orderNumber}
                     </div>
 
                     {/* Kolumna dla Status */}
-                    <div className="flex-1 mb-1 md:mb-0 gap-1">
-                      <span className="font-bold flex lg:hidden">Order Status:</span> {order.orderStatus}
+                    <div className="flex mb-1 md:mb-0 gap-1 lg:mr-8">
+                      <span className="font-bold flex-1 lg:hidden">
+                        Order Status:
+                      </span>{" "}
+                      {order.orderStatus}
+                      <motion.div
+                        whileHover={{ scale: 1.2 }}
+                        className="flex-1 mb-4 lg:mb-0 -ml-16 lg:mx-auto cursor-pointer"
+                        onClick={() =>
+                          handleLockStatusChange(order.orderNumber, isLocked)
+                        }
+                      >
+                        <img src={locker} className="flex-1 lg:flex" />
+                      </motion.div>
                     </div>
 
                     {/* Kolumna dla Notebook Status */}
-                    <div className="flex-1 mb-1 md:mb-0 -p-2">
-                      <span className="font-bold mr-1 flex lg:hidden">Amounts:</span>
+                    <div className="flex-1 mb-2 md:mb-0 -p-2">
+                      <span className="font-bold mr-1 flex-1 lg:hidden">
+                        Amounts:
+                      </span>
                       <span className="p-2 bg-green-500 rounded-lg font-bold">
                         {notebookStatus}/{systemStatus}
                       </span>
                     </div>
 
                     {/* Expires Date */}
-                    <div className="flex-1 mb-1 md:mb-0 gap-1 mx-2">
+                    <div className="flex-1 mb-1 md:mb-0 gap-1 mx-0 lg:mx-2">
                       <span className="font-bold flex-1 lg:hidden">
                         Expire Date:
                       </span>{" "}
@@ -127,6 +189,7 @@ const OrderTable = () => {
 
                     {/* Kolumna dla Tick Click */}
                     <div className="flex lg:flex-1 mb-1 md:mb-0 items-start justify-start lg:items-center lg:justify-center">
+                      <span className="flex font-bold lg:hidden">Notebook:</span>
                       <div
                         onClick={() =>
                           handleNotebookTickClick(
@@ -134,7 +197,7 @@ const OrderTable = () => {
                             order.orderNotebookCount
                           )
                         }
-                        className={`mx-auto lg:mx-2 border-2 border-black w-8 h-8 rounded-lg cursor-pointer ${
+                        className={`mx-1 lg:mx-2 border-2 border-black w-8 h-8 rounded-lg cursor-pointer ${
                           notebookTickVisible ? "bg-white" : "bg-transparent"
                         } flex items-center justify-center`}
                       >
@@ -142,6 +205,7 @@ const OrderTable = () => {
                           <img src={tick} alt="tick" className="w-6 h-6" />
                         )}
                       </div>
+                      <span className="flex font-bold lg:hidden">System:</span>
                       <div
                         onClick={() =>
                           handleSystemTickClick(
@@ -173,12 +237,14 @@ const OrderTable = () => {
                         <option value="xyz">XYZ</option>
                       </select>
                     </div>
-                    <div>
+                    <motion.div
+                      whileHover={{ scale: 1.2 }}
+                      onClick={() =>
+                        handlePrioStatusChange(order.orderNumber, isPrio)
+                      }
+                    >
                       <img src={fire} className="hidden lg:flex" />
-                    </div>
-                    <div>
-                      <img src={fire} className="hidden lg:flex" />
-                    </div>
+                    </motion.div>
                     <div>
                       <span className="flex-1 lg:hidden font-bold">
                         Delete order:

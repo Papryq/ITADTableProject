@@ -238,6 +238,7 @@ export const addOrder = async (req, res) => {
     orderSystemStatus,
     orderNotebookStatus,
     orderPrio,
+    orderDeadline,
     orderOperator,
   } = req.body;
 
@@ -252,12 +253,14 @@ export const addOrder = async (req, res) => {
     const order = new Order({
       orderNumber,
       orderSystemCount,
+      orderLockStatus,
       orderNotebookCount,
       orderDateExpiresAt,
       orderStatus,
       orderSystemStatus,
       orderNotebookStatus,
       orderPrio,
+      orderDeadline,
       orderOperator,
     });
 

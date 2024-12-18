@@ -34,6 +34,10 @@ const orderSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  orderDeadline: {
+    type: Boolean,
+    default: false,
+  },
   orderPrio: {
     type: Boolean,
     default: false,
