@@ -6,6 +6,7 @@ import ModalOrder from "./ModalOrder";
 import useHandleTickClick from "../hooks/useHandleTickClick";
 import { useAuthStore } from "../store/authStore";
 import fire from "../assets/fire.png";
+import firered from "../assets/firered.png"
 import tick from "../assets/tick.png";
 import locker from "../assets/lock2.png";
 import exclamation from "../assets/exclamation2.png";
@@ -153,14 +154,14 @@ const OrderTable = () => {
                     </div>
 
                     {/* Kolumna dla Status */}
-                    <div className="flex mb-1 md:mb-0 gap-1 lg:mr-8">
+                    <div className="flex mb-1 md:mb-0 gap-1  lg:mr-8">
                       <span className="font-bold flex-1 lg:hidden">
                         Order Status:
                       </span>{" "}
                       {order.orderStatus}
                       <motion.div
                         whileHover={{ scale: 1.2 }}
-                        className="flex-1 mb-4 lg:mb-0 -ml-16 lg:mx-auto cursor-pointer"
+                        className="flex-1 mb-4 lg:mb-0 ml-16 lg:mx-auto cursor-pointer"
                         onClick={() =>
                           handleLockStatusChange(order.orderNumber, isLocked)
                         }
@@ -243,7 +244,7 @@ const OrderTable = () => {
                         handlePrioStatusChange(order.orderNumber, isPrio)
                       }
                     >
-                      <img src={fire} className="hidden lg:flex" />
+                      {isPrio === true ? <img src={fire} className="hidden lg:flex" /> : <img src={firered} className="hidden lg:flex" />}
                     </motion.div>
                     <div>
                       <span className="flex-1 lg:hidden font-bold">
