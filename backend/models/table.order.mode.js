@@ -19,7 +19,7 @@ const orderSchema = new mongoose.Schema({
     required: false,
   },
   orderDateExpiresAt: {
-    type: Date,
+    type: String,
     required: false,
   },
   orderStatus: {

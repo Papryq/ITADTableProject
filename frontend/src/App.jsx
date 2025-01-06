@@ -22,7 +22,7 @@ function App() {
         delay={0}
       />
 
-      <FloatingImage size="w-128 h-128" top="45%" left="-15%" delay={0} />
+      <FloatingImage size="w-128 h-128" top="45%" left="-15%" delay={0}/>
 
       <FloatingImage
         rotateStart={0}
@@ -34,7 +34,7 @@ function App() {
       />
 
       <Routes>
-        <Route path="/" element={<DashboardPage />} />
+        <Route className="z-1" path="/" element={<DashboardPage />} />
 
         <Route path="/login" element={<LoginPage />} />
 

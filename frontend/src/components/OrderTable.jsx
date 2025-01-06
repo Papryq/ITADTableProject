@@ -6,17 +6,19 @@ import ModalOrder from "./ModalOrder";
 import useHandleTickClick from "../hooks/useHandleTickClick";
 import { useAuthStore } from "../store/authStore";
 import fire from "../assets/fire.png";
-import firered from "../assets/firered.png"
+import firered from "../assets/firered.png";
 import tick from "../assets/tick.png";
 import locker from "../assets/lock2.png";
 import exclamation from "../assets/exclamation2.png";
-import exclamationOff from "../assets/exclamationOff.png"
+import exclamationOff from "../assets/exclamationOff.png";
 
 const OrderTable = () => {
   const { fetchOrders, deleteOrder, updateOrder, orders, isLoading, error } =
     useAuthStore();
   const [lockStatus, setLockStatus] = useState({});
   const [prioStatus, setPrioStatus] = useState({});
+  const [orderNotebookStatus, setOrderNotebookStatus] = useState({});
+  const [orderSystemStatus, setOrderSystemStatus] = useState({});
   const [deadlineStatus, setDeadlineStatus] = useState({});
 
   const handleLockStatusChange = async (orderNumber, currentStatus) => {
@@ -61,15 +63,32 @@ const OrderTable = () => {
     }
   };
 
-  const {
-    updatedOrders: notebookOrders,
-    handleTickClick: handleNotebookTickClick,
-  } = useHandleTickClick("notebookStatus", "orderNotebookCount");
+  const handleNotebookStatusChange = async (orderNumber, currentStatus) => {
+    try {
+      const newStatus = !currentStatus;
+      await updateOrder(orderNumber, { orderNotebookStatus: newStatus });
+      setOrderNotebookStatus((prev) => ({
+        ...prev,
+        [orderNumber]: newStatus,
+      }));
+    } catch (error) {
+      console.log("Failed to change NotebookStatus");
+    }
+  };
 
-  const {
-    updatedOrders: systemOrders,
-    handleTickClick: handleSystemTickClick,
-  } = useHandleTickClick("systemStatus", "orderSystemCount");
+  const handleSystemStatusChange = async (orderNumber, currentStatus) => {
+    try {
+      const newStatus = !currentStatus;
+      await updateOrder(orderNumber, { orderSystemStatus: newStatus });
+      setOrderSystemStatus((prev) => ({
+        ...prev,
+        [orderNumber]: newStatus,
+      }));
+    } catch (error) {
+      console.log("Failed to change SystemStatus");
+    }
+  };
+
   const formatDate = (date) => dayjs(date).format("DD/MM/YYYY");
 
   useEffect(() => {
@@ -83,7 +102,7 @@ const OrderTable = () => {
   };
 
   return (
-    <div className="max-h-[26rem] lg:max-h-[48rem] w-full lg:w-1/2 overflow-y-auto scrollbar-hide mt-24 lg:mt-0">
+    <div className="max-h-[26rem] lg:max-h-[48rem] w-full lg:w-1/2 overflow-y-auto scrollbar-hide mt-24 lg:mt-0 z-1">
       <ModalOrder />
       <div className="border-2 border-white shadow-md scrollbar-hide">
         {isLoading ? (
@@ -95,31 +114,43 @@ const OrderTable = () => {
             {orders.map((order, index) => {
               const isLocked =
                 lockStatus[order.orderNumber] ?? order.orderLockStatus;
-              console.log(order.orderNumber, isLocked);
+              // console.log(order.orderNumber, isLocked);
 
               const isPrio = prioStatus[order.orderNumber] ?? order.orderPrio;
-              console.log(order.orderNumber, isPrio, "Prio");
+              // console.log(order.orderNumber, isPrio, "Prio");
 
               const isDeadline =
                 deadlineStatus[order.orderNumber] ?? order.orderDeadline;
-              console.log(order.orderNumber, isDeadline, "Deadline");
+              // console.log(order.orderNumber, isDeadline, "Deadline");
 
-              const notebookTickVisible =
-                notebookOrders[order.orderNumber]?.notebookStatusTickVisible ||
-                false;
-              const notebookStatus =
-                notebookOrders[order.orderNumber]?.notebookStatus ||
-                order.orderNotebookCount;
+              const isNotebookStatusChange =
+                orderNotebookStatus[order.orderNumber] ??
+                order.orderNotebookStatus;
+              console.log(
+                order.orderNumber,
+                isNotebookStatusChange,
+                "Notebook status"
+              );
 
-              const systemTickVisible =
-                systemOrders[order.orderNumber]?.systemStatusTickVisible ||
-                false;
-              const systemStatus =
-                systemOrders[order.orderNumber]?.systemStatus ||
-                order.orderSystemCount;
+              const isSystemStatusChange =
+              orderSystemStatus[order.orderNumber] ??
+              order.orderSystemStatus;
+
+              // const notebookTickVisible =
+              //   notebookOrders[order.orderNumber]?.notebookStatusTickVisible ||
+              //   false;
+              // const notebookStatus =
+              //   notebookOrders[order.orderNumber]?.notebookStatus ||
+              //   order.orderNotebookCount;
+
+              // const systemTickVisible =
+              //   systemOrders[order.orderNumber]?.systemStatusTickVisible ||
+              //   false;
+              // const systemStatus =
+              //   systemOrders[order.orderNumber]?.systemStatus ||
+              //   order.orderSystemCount;
 
               return (
-
                 <motion.div
                   key={order.orderNumber}
                   layout
@@ -128,9 +159,9 @@ const OrderTable = () => {
                   transition={{ duration: 0.5, delay: index * 0.05 }}
                 >
                   <div
-                    className={`flex flex-col 2xl:flex-row lg:flex-row md:flex-col w-full mx-auto border-2 p-4 ${isDeadline ? "border-red-500 border-4" : "border-white"}  ${
-                      isLocked ? "bg-slate-400" : "bg-white"
-                    }`}
+                    className={`flex flex-col 2xl:flex-row lg:flex-row md:flex-col w-full mx-auto border-2 p-4 ${
+                      isDeadline ? "border-red-500 border-4" : "border-white"
+                    }  ${isLocked ? "bg-slate-400" : "bg-white"}`}
                   >
                     {/* Order Deadline */}
                     <span className="font-bold mr-1 lg:hidden">Deadline:</span>
@@ -141,9 +172,12 @@ const OrderTable = () => {
                         handleDeadlineChange(order.orderNumber, isDeadline)
                       }
                     >
-                      {isDeadline === true ? <img src={exclamation} className="flex" /> : <img src={exclamationOff} className="flex" />}
+                      {isDeadline === true ? (
+                        <img src={exclamation} className="flex" />
+                      ) : (
+                        <img src={exclamationOff} className="flex" />
+                      )}
                     </motion.div>
-
 
                     {/* Order Number */}
                     <div className="flex-1 mb-1 md:mb-0 gap-1">
@@ -176,7 +210,7 @@ const OrderTable = () => {
                         Amounts:
                       </span>
                       <span className="p-2 bg-green-500 rounded-lg font-bold">
-                        {notebookStatus}/{systemStatus}
+                        {isNotebookStatusChange === false ? order.orderNotebookCount : "Finished"}/{isSystemStatusChange === false ? order.orderSystemCount : "Finished"}
                       </span>
                     </div>
 
@@ -190,35 +224,37 @@ const OrderTable = () => {
 
                     {/* Kolumna dla Tick Click */}
                     <div className="flex lg:flex-1 mb-1 md:mb-0 items-start justify-start lg:items-center lg:justify-center">
-                      <span className="flex font-bold lg:hidden">Notebook:</span>
+                      <span className="flex font-bold lg:hidden">
+                        Notebook:
+                      </span>
                       <div
                         onClick={() =>
-                          handleNotebookTickClick(
+                          handleNotebookStatusChange(
                             order.orderNumber,
-                            order.orderNotebookCount
+                            isNotebookStatusChange
                           )
                         }
-                        className={`mx-1 lg:mx-2 border-2 border-black w-8 h-8 rounded-lg cursor-pointer ${
-                          notebookTickVisible ? "bg-white" : "bg-transparent"
+                        className={`mx-1 lg:mx-2 border-2 border-black w-7 h-7 rounded-lg cursor-pointer ${
+                          isNotebookStatusChange ? "bg-white border-none" : "bg-transparent"
                         } flex items-center justify-center`}
                       >
-                        {notebookTickVisible && (
+                        {isNotebookStatusChange === true ? (
                           <img src={tick} alt="tick" className="w-6 h-6" />
-                        )}
+                        ) : ("")}
                       </div>
                       <span className="flex font-bold lg:hidden">System:</span>
                       <div
-                        onClick={() =>
-                          handleSystemTickClick(
+                        onClick={() => 
+                          handleSystemStatusChange(
                             order.orderNumber,
-                            order.orderSystemCount
+                            isSystemStatusChange
                           )
                         }
-                        className={`border-2 border-black w-8 h-8 rounded-lg cursor-pointer ${
-                          systemTickVisible ? "bg-white" : "bg-transparent"
+                        className={`border-2 border-black w-7 h-7 rounded-lg cursor-pointer ${
+                          isSystemStatusChange ? "bg-white border-none" : "bg-transparent"
                         } flex items-center justify-center`}
                       >
-                        {systemTickVisible && (
+                        {isSystemStatusChange === true && (
                           <img src={tick} alt="tick" className="w-6 h-6" />
                         )}
                       </div>
@@ -244,7 +280,11 @@ const OrderTable = () => {
                         handlePrioStatusChange(order.orderNumber, isPrio)
                       }
                     >
-                      {isPrio === true ? <img src={fire} className="hidden lg:flex" /> : <img src={firered} className="hidden lg:flex" />}
+                      {isPrio === true ? (
+                        <img src={fire} className="hidden lg:flex" />
+                      ) : (
+                        <img src={firered} className="hidden lg:flex" />
+                      )}
                     </motion.div>
                     <div>
                       <span className="flex-1 lg:hidden font-bold">

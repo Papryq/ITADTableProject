@@ -17,10 +17,13 @@ const ModalOrder = () => {
   const { addOrder, isLoading, error } = useAuthStore();
 
   const handleSubmit = async (e) => {
+
     try {
       const formattedDate = orderDateExpiresAt
-        ? dayjs(orderDateExpiresAt).format('YYYY-MM-DD') // Changes to "YYYY-MM-DD"
-        : null;
+        ? dayjs(orderDateExpiresAt).format('YYYY-MM-DD').toString() // Changes to "YYYY-MM-DD"
+        : "";
+
+        console.log("Order Date Expires At:", formattedDate)
   
       await addOrder(
         orderNumber,

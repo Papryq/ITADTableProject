@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import dayjs from "dayjs";
 import axios from "axios";
 
 const API_URL =
@@ -165,27 +166,32 @@ export const useAuthStore = create((set) => ({
 
   addOrder: async (
     orderNumber,
-    orderLockStatus,
     orderSystemCount,
     orderNotebookCount,
     orderDateExpiresAt,
-    orderStatus,
-    orderPrio,
-    orderOperator
   ) => {
     set({ isLoading: true, error: null });
+
+    console.log(    
+      "orderNumber:", orderNumber,
+      "orderSystemCount", orderSystemCount,
+      "orderNotebookCount", orderNotebookCount,
+      "oderDateExpiresAt", orderDateExpiresAt,
+    );
+
+    // Sprawdzenie i formatowanie daty
+    const formattedDate = orderDateExpiresAt
+      ? dayjs(orderDateExpiresAt).format('YYYY-MM-DD') // formatowanie na 'YYYY-MM-DD'
+      : ""; // jeśli brak daty, wysyłamy pusty ciąg
 
     try {
       const response = await axios.post(`${API_URL}/orders`, {
         orderNumber,
-        orderLockStatus,
         orderSystemCount,
         orderNotebookCount,
-        orderDateExpiresAt,
-        orderStatus,
-        orderPrio,
-        orderOperator,
+        orderDateExpiresAt: formattedDate,
       });
+
       set({
         orders: response.data.orders,
         isLoading: false,
