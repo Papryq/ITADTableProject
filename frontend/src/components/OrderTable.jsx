@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import dayjs from "dayjs";
 
+
 import ModalOrder from "./ModalOrder";
-import useHandleTickClick from "../hooks/useHandleTickClick";
 import { useAuthStore } from "../store/authStore";
 import fire from "../assets/fire.png";
 import firered from "../assets/firered.png";
@@ -102,9 +102,9 @@ const OrderTable = () => {
   };
 
   return (
-    <div className="max-h-[26rem] lg:max-h-[48rem] w-full lg:w-1/2 overflow-y-auto scrollbar-hide mt-24 lg:mt-0 z-1">
+    <div className="max-h-[26rem] lg:max-h-[48rem] w-full lg:w-3/4 overflow-y-auto scrollbar-hide mt-24 lg:mt-0 z-1 p-8 bg-teal-200 rounded-2xl shadow-2xl">
       <ModalOrder />
-      <div className="border-2 border-white shadow-md scrollbar-hide">
+      <div className="border-2 border-white shadow-md scrollbar-hide ">
         {isLoading ? (
           <p>Loading orders...</p>
         ) : error ? (
@@ -112,43 +112,26 @@ const OrderTable = () => {
         ) : orders && orders.length > 0 ? (
           <ul>
             {orders.map((order, index) => {
-              const isLocked =
+              const lockStatusChange =
                 lockStatus[order.orderNumber] ?? order.orderLockStatus;
-              // console.log(order.orderNumber, isLocked);
 
-              const isPrio = prioStatus[order.orderNumber] ?? order.orderPrio;
-              // console.log(order.orderNumber, isPrio, "Prio");
+              const prioStatusChange =
+                prioStatus[order.orderNumber] ?? order.orderPrio;
 
-              const isDeadline =
+              const deadlineStatusChange =
                 deadlineStatus[order.orderNumber] ?? order.orderDeadline;
-              // console.log(order.orderNumber, isDeadline, "Deadline");
 
-              const isNotebookStatusChange =
+              const notebookStatusChange =
                 orderNotebookStatus[order.orderNumber] ??
                 order.orderNotebookStatus;
               console.log(
                 order.orderNumber,
-                isNotebookStatusChange,
+                notebookStatusChange,
                 "Notebook status"
               );
 
-              const isSystemStatusChange =
-              orderSystemStatus[order.orderNumber] ??
-              order.orderSystemStatus;
-
-              // const notebookTickVisible =
-              //   notebookOrders[order.orderNumber]?.notebookStatusTickVisible ||
-              //   false;
-              // const notebookStatus =
-              //   notebookOrders[order.orderNumber]?.notebookStatus ||
-              //   order.orderNotebookCount;
-
-              // const systemTickVisible =
-              //   systemOrders[order.orderNumber]?.systemStatusTickVisible ||
-              //   false;
-              // const systemStatus =
-              //   systemOrders[order.orderNumber]?.systemStatus ||
-              //   order.orderSystemCount;
+              const systemStatusChange =
+                orderSystemStatus[order.orderNumber] ?? order.orderSystemStatus;
 
               return (
                 <motion.div
@@ -160,19 +143,26 @@ const OrderTable = () => {
                 >
                   <div
                     className={`flex flex-col 2xl:flex-row lg:flex-row md:flex-col w-full mx-auto border-2 p-4 ${
-                      isDeadline ? "border-red-500 border-4" : "border-white"
-                    }  ${isLocked ? "bg-slate-400" : "bg-white"}`}
+                      deadlineStatusChange
+                        ? "border-red-500 border-4"
+                        : "border-white"
+                    }  ${lockStatusChange ? "bg-slate-400" : "bg-white"}`}
                   >
                     {/* Order Deadline */}
-                    <span className="font-bold mr-1 lg:hidden">Deadline:</span>
                     <motion.div
-                      className="flex-1 mr-4 lg:mr-0 cursor-pointer mb-2 lg:mb-0"
+                      className="flex lg:flex-1 mr-4 lg:mr-0 cursor-pointer mb-2 lg:mb-0"
                       whileHover={{ scale: 1.2 }}
                       onClick={() =>
-                        handleDeadlineChange(order.orderNumber, isDeadline)
+                        handleDeadlineChange(
+                          order.orderNumber,
+                          deadlineStatusChange
+                        )
                       }
                     >
-                      {isDeadline === true ? (
+                      <span className="font-bold mr-1 lg:hidden">
+                        Deadline:
+                      </span>
+                      {deadlineStatusChange === true ? (
                         <img src={exclamation} className="flex" />
                       ) : (
                         <img src={exclamationOff} className="flex" />
@@ -189,7 +179,7 @@ const OrderTable = () => {
 
                     {/* Kolumna dla Status */}
                     <div className="flex mb-1 md:mb-0 gap-1  lg:mr-8">
-                      <span className="font-bold flex-1 lg:hidden">
+                      <span className="font-bold flex lg:hidden">
                         Order Status:
                       </span>{" "}
                       {order.orderStatus}
@@ -197,7 +187,10 @@ const OrderTable = () => {
                         whileHover={{ scale: 1.2 }}
                         className="flex-1 mb-4 lg:mb-0 ml-16 lg:mx-auto cursor-pointer"
                         onClick={() =>
-                          handleLockStatusChange(order.orderNumber, isLocked)
+                          handleLockStatusChange(
+                            order.orderNumber,
+                            lockStatusChange
+                          )
                         }
                       >
                         <img src={locker} className="flex-1 lg:flex" />
@@ -210,7 +203,13 @@ const OrderTable = () => {
                         Amounts:
                       </span>
                       <span className="p-2 bg-green-500 rounded-lg font-bold">
-                        {isNotebookStatusChange === false ? order.orderNotebookCount : "Finished"}/{isSystemStatusChange === false ? order.orderSystemCount : "Finished"}
+                        {notebookStatusChange === false
+                          ? order.orderNotebookCount
+                          : "Finished"}
+                        /
+                        {systemStatusChange === false
+                          ? order.orderSystemCount
+                          : "Finished"}
                       </span>
                     </div>
 
@@ -231,30 +230,34 @@ const OrderTable = () => {
                         onClick={() =>
                           handleNotebookStatusChange(
                             order.orderNumber,
-                            isNotebookStatusChange
+                            notebookStatusChange
                           )
                         }
-                        className={`mx-1 lg:mx-2 border-2 border-black w-7 h-7 rounded-lg cursor-pointer ${
-                          isNotebookStatusChange ? "bg-white border-none" : "bg-transparent"
+                        className={`mx-1 lg:mx-2 border-2 border-black w-6 h-6 rounded-md cursor-pointer ${
+                          notebookStatusChange
+                            ? "border-none"
+                            : "bg-transparent"
                         } flex items-center justify-center`}
                       >
-                        {isNotebookStatusChange === true ? (
+                        {notebookStatusChange === true ? (
                           <img src={tick} alt="tick" className="w-6 h-6" />
-                        ) : ("")}
+                        ) : (
+                          ""
+                        )}
                       </div>
                       <span className="flex font-bold lg:hidden">System:</span>
                       <div
-                        onClick={() => 
+                        onClick={() =>
                           handleSystemStatusChange(
                             order.orderNumber,
-                            isSystemStatusChange
+                            systemStatusChange
                           )
                         }
-                        className={`border-2 border-black w-7 h-7 rounded-lg cursor-pointer ${
-                          isSystemStatusChange ? "bg-white border-none" : "bg-transparent"
+                        className={`border-2 border-black w-6 h-6 rounded-md cursor-pointer ${
+                          systemStatusChange ? "border-none" : "bg-transparent"
                         } flex items-center justify-center`}
                       >
-                        {isSystemStatusChange === true && (
+                        {systemStatusChange === true && (
                           <img src={tick} alt="tick" className="w-6 h-6" />
                         )}
                       </div>
@@ -277,10 +280,13 @@ const OrderTable = () => {
                     <motion.div
                       whileHover={{ scale: 1.2 }}
                       onClick={() =>
-                        handlePrioStatusChange(order.orderNumber, isPrio)
+                        handlePrioStatusChange(
+                          order.orderNumber,
+                          prioStatusChange
+                        )
                       }
                     >
-                      {isPrio === true ? (
+                      {prioStatusChange === true ? (
                         <img src={fire} className="hidden lg:flex" />
                       ) : (
                         <img src={firered} className="hidden lg:flex" />
