@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import dayjs from "dayjs";
 
-
 import ModalOrder from "./ModalOrder";
 import { useAuthStore } from "../store/authStore";
 import fire from "../assets/fire.png";
@@ -102,9 +101,9 @@ const OrderTable = () => {
   };
 
   return (
-    <div className="max-h-[26rem] lg:max-h-[48rem] w-full lg:w-3/4 overflow-y-auto scrollbar-hide mt-24 lg:mt-0 z-1 p-8 bg-teal-200 rounded-2xl shadow-2xl">
+    <div className="max-h-[26rem] lg:max-h-[48rem] w-full lg:w-3/4 overflow-y-auto scrollbar-hide mt-24 lg:mt-0 z-1 p-0 lg:p-4 lg:bg-teal-100 rounded-2xl shadow-2xl">
       <ModalOrder />
-      <div className="border-2 border-white shadow-md scrollbar-hide ">
+      <div className="border-2 border-black shadow-xl scrollbar-hide ">
         {isLoading ? (
           <p>Loading orders...</p>
         ) : error ? (
@@ -112,6 +111,11 @@ const OrderTable = () => {
         ) : orders && orders.length > 0 ? (
           <ul>
             {orders.map((order, index) => {
+
+              const isIndexEven = index % 2 === 0 ? true : false
+
+              const isItemFirst = index === 0 ? true : false
+
               const lockStatusChange =
                 lockStatus[order.orderNumber] ?? order.orderLockStatus;
 
@@ -142,11 +146,9 @@ const OrderTable = () => {
                   transition={{ duration: 0.5, delay: index * 0.05 }}
                 >
                   <div
-                    className={`flex flex-col 2xl:flex-row lg:flex-row md:flex-col w-full mx-auto border-2 p-4 ${
-                      deadlineStatusChange
-                        ? "border-red-500 border-4"
-                        : "border-white"
-                    }  ${lockStatusChange ? "bg-slate-400" : "bg-white"}`}
+                    className={`flex flex-col 2xl:flex-row lg:flex-row md:flex-col border-black w-full mx-auto p-4 ${isItemFirst === false ? "border-t-2" : ""}
+                    }  ${lockStatusChange ? "bg-slate-400" : "bg-white"} ${isIndexEven === false ? "bg-white" : "bg-teal-200"}`
+                  }
                   >
                     {/* Order Deadline */}
                     <motion.div
@@ -163,9 +165,9 @@ const OrderTable = () => {
                         Deadline:
                       </span>
                       {deadlineStatusChange === true ? (
-                        <img src={exclamation} className="flex" />
+                        <img src={exclamation} className="flex w-7 h-7" />
                       ) : (
-                        <img src={exclamationOff} className="flex" />
+                        <img src={exclamationOff} className="flex w-7 h-7" />
                       )}
                     </motion.div>
 
