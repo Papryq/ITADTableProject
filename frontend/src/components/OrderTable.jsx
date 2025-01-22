@@ -8,6 +8,7 @@ import fire from "../assets/fire.png";
 import firered from "../assets/firered.png";
 import tick from "../assets/tick.png";
 import locker from "../assets/lock2.png";
+import unlocked from "../assets/unlocked.png";
 import exclamation from "../assets/exclamation2.png";
 import exclamationOff from "../assets/exclamationOff.png";
 
@@ -18,6 +19,7 @@ const OrderTable = () => {
   const [prioStatus, setPrioStatus] = useState({});
   const [orderNotebookStatus, setOrderNotebookStatus] = useState({});
   const [orderSystemStatus, setOrderSystemStatus] = useState({});
+  const [operator, setOperator] = useState({});
   const [deadlineStatus, setDeadlineStatus] = useState({});
 
   const handleLockStatusChange = async (orderNumber, currentStatus) => {
@@ -88,6 +90,19 @@ const OrderTable = () => {
     }
   };
 
+  const handleOperatorChange = async (orderNumber, currentStatus) => {
+    try {
+      const newStatus = currentStatus;
+      await updateOrder(orderNumber, { orderOperator: currentStatus });
+      setOperator((prev) => ({
+        ...prev,
+        [orderNumber]: newStatus,
+      }));
+    } catch (error) {
+      console.log("Failed to change operator");
+    }
+  };
+
   const formatDate = (date) => dayjs(date).format("DD/MM/YYYY");
 
   useEffect(() => {
@@ -101,7 +116,12 @@ const OrderTable = () => {
   };
 
   return (
-    <div className="max-h-[26rem] lg:max-h-[48rem] w-full lg:w-3/4 overflow-y-auto scrollbar-hide mt-24 lg:mt-0 z-1 p-0 lg:p-4 lg:bg-teal-100 rounded-2xl shadow-2xl">
+    <motion.div
+      initial={{ opacity: 0, x: -120 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.5, delay: 0.4 }}
+      className="max-h-[26rem] lg:max-h-[48rem] w-full lg:w-3/4 overflow-y-auto scrollbar-hide mt-24 lg:mt-36  z-1 p-0 lg:p-4 lg:bg-teal-100 rounded-2xl shadow-2xl"
+    >
       <ModalOrder />
       <div className="border-2 border-black shadow-xl scrollbar-hide ">
         {isLoading ? (
@@ -111,10 +131,9 @@ const OrderTable = () => {
         ) : orders && orders.length > 0 ? (
           <ul>
             {orders.map((order, index) => {
+              const isIndexEven = index % 2 === 0 ? true : false;
 
-              const isIndexEven = index % 2 === 0 ? true : false
-
-              const isItemFirst = index === 0 ? true : false
+              const isItemFirst = index === 0 ? true : false;
 
               const lockStatusChange =
                 lockStatus[order.orderNumber] ?? order.orderLockStatus;
@@ -128,11 +147,6 @@ const OrderTable = () => {
               const notebookStatusChange =
                 orderNotebookStatus[order.orderNumber] ??
                 order.orderNotebookStatus;
-              console.log(
-                order.orderNumber,
-                notebookStatusChange,
-                "Notebook status"
-              );
 
               const systemStatusChange =
                 orderSystemStatus[order.orderNumber] ?? order.orderSystemStatus;
@@ -143,12 +157,13 @@ const OrderTable = () => {
                   layout
                   initial={{ opacity: 0, x: -120 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.05 }}
+                  transition={{ duration: 0.5, delay: 0.4 + index * 0.05 }}
                 >
                   <div
-                    className={`flex flex-col 2xl:flex-row lg:flex-row md:flex-col border-black w-full mx-auto p-4 ${isItemFirst === false ? "border-t-2" : ""}
-                    }  ${lockStatusChange ? "bg-slate-400" : "bg-white"} ${isIndexEven === false ? "bg-white" : "bg-teal-200"}`
-                  }
+                    className={`flex flex-col 2xl:flex-row lg:flex-row md:flex-col border-black w-full mx-auto p-4 
+                      ${isItemFirst === false ? "border-t-2" : ""}
+                      ${isIndexEven === false ? "bg-white" : "bg-teal-200"}
+                    `}
                   >
                     {/* Order Deadline */}
                     <motion.div
@@ -180,14 +195,14 @@ const OrderTable = () => {
                     </div>
 
                     {/* Kolumna dla Status */}
-                    <div className="flex mb-1 md:mb-0 gap-1  lg:mr-8">
+                    <div className="flex mb-1 md:mb-0 gap-1 lg:mr-8 lg:pb-2 lg:py-0">
                       <span className="font-bold flex lg:hidden">
                         Order Status:
                       </span>{" "}
                       {order.orderStatus}
                       <motion.div
-                        whileHover={{ scale: 1.2 }}
-                        className="flex-1 mb-4 lg:mb-0 ml-16 lg:mx-auto cursor-pointer"
+                        whileHover={{ scale: 1.1 }}
+                        className="flex-1 mb-4 lg:mb-0 lg:mx-auto cursor-pointer"
                         onClick={() =>
                           handleLockStatusChange(
                             order.orderNumber,
@@ -195,16 +210,20 @@ const OrderTable = () => {
                           )
                         }
                       >
-                        <img src={locker} className="flex-1 lg:flex" />
+                        {lockStatusChange === true ? (
+                          <img src={locker} className="flex-1 lg:flex" />
+                        ) : (
+                          <img src={unlocked} className="flex-1 lg:flex" />
+                        )}
                       </motion.div>
                     </div>
 
                     {/* Kolumna dla Notebook Status */}
-                    <div className="flex-1 mb-2 md:mb-0 -p-2">
+                    <div className="flex-1 mb-2 md:mb-0 pb-1 lg:-p-2">
                       <span className="font-bold mr-1 flex-1 lg:hidden">
                         Amounts:
                       </span>
-                      <span className="p-2 bg-green-500 rounded-lg font-bold">
+                      <span className="pb-1 lg:p-2 bg-green-500 rounded-lg font-bold">
                         {notebookStatusChange === false
                           ? order.orderNotebookCount
                           : "Finished"}
@@ -223,7 +242,7 @@ const OrderTable = () => {
                       {formatDate(order.orderDateExpiresAt)}
                     </div>
 
-                    {/* Kolumna dla Tick Click */}
+                    {/* Kolumna dla Statusu */}
                     <div className="flex lg:flex-1 mb-1 md:mb-0 items-start justify-start lg:items-center lg:justify-center">
                       <span className="flex font-bold lg:hidden">
                         Notebook:
@@ -235,7 +254,7 @@ const OrderTable = () => {
                             notebookStatusChange
                           )
                         }
-                        className={`mx-1 lg:mx-2 border-2 border-black w-6 h-6 rounded-md cursor-pointer ${
+                        className={`mx-1 border-2 border-black w-6 h-6 rounded-md cursor-pointer ${
                           notebookStatusChange
                             ? "border-none"
                             : "bg-transparent"
@@ -247,7 +266,9 @@ const OrderTable = () => {
                           ""
                         )}
                       </div>
-                      <span className="flex font-bold lg:hidden">System:</span>
+                      <span className="mx-1 flex font-bold lg:hidden">
+                        System:
+                      </span>
                       <div
                         onClick={() =>
                           handleSystemStatusChange(
@@ -266,21 +287,35 @@ const OrderTable = () => {
                     </div>
 
                     {/* Select */}
-                    <div className="flex-1 mb-2 md:mb-0 flex items-start justify-start lg:items-center lg:justify-center gap-1">
+                    <div className="flex-1 mx-2 mb-2 md:mb-0 flex items-start justify-start lg:items-center lg:justify-center gap-1">
                       <span className="font-bold flex lg:hidden">
                         Operator:
                       </span>
                       <select
+                        value={
+                          operator[order.orderNumber] ??
+                          order.orderOperator ??
+                          ""
+                        }
+                        onChange={(e) =>
+                          handleOperatorChange(
+                            order.orderNumber,
+                            e.target.value
+                          )
+                        }
                         id="options"
                         className="border-2 border-black p-1 rounded-lg mb-1 lg:mb-0"
                       >
                         <option>--</option>
-                        <option value="abc">ABC</option>
-                        <option value="xyz">XYZ</option>
+                        <option value="Patryk">Patryk</option>
+                        <option value="Rafal">Rafal</option>
+                        <option value="Bartek">Bartek</option>
+                        <option value="Piotr">Piotr</option>
+                        <option value="Jarek">Jarek</option>
                       </select>
                     </div>
                     <motion.div
-                      whileHover={{ scale: 1.2 }}
+                      whileHover={{ scale: 1.1 }}
                       onClick={() =>
                         handlePrioStatusChange(
                           order.orderNumber,
@@ -314,7 +349,7 @@ const OrderTable = () => {
           <p>No orders available.</p>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
