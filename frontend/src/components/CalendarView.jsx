@@ -73,7 +73,7 @@ const Calendar = () => {
     fetchOrders();
   }, [fetchOrders]);
 
-  // Filter orders based on the selected date – pozostawiamy tylko te z notatką (orderNote)
+  // Filter orders based on the selected date
   useEffect(() => {
     if (selectedDate) {
       const today = dayjs().startOf("day");
@@ -91,8 +91,7 @@ const Calendar = () => {
     }
   }, [selectedDate, orders]);
 
-  // Organize orders by date and store them in a new structure (do wyświetlania kropek w kalendarzu)
-  useEffect(() => {
+  // Organize orders by date and store them in a new structure
     const ordersByDate = orders.reduce((acc, order) => {
       const date = dayjs(order.orderDateExpiresAt).format("DD/MM/YYYY");
 
@@ -251,3 +250,5 @@ const Calendar = () => {
 };
 
 export default Calendar;
+
+// Needs to be updated to fully working

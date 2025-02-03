@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { motion } from "framer-motion";
-import { Loader, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import dayjs from "dayjs";
 
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
@@ -17,7 +17,7 @@ const ModalOrder = () => {
 
   const { addOrder, isLoading, error } = useAuthStore();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async () => {
     try {
       const formattedDate = orderDateExpiresAt
         ? dayjs(orderDateExpiresAt).format("YYYY-MM-DD").toString() // Changes to "YYYY-MM-DD"
@@ -32,7 +32,6 @@ const ModalOrder = () => {
         formattedDate
       );
 
-      console.log("Formatted Date:", formattedDate); // To be deleted
     } catch (error) {
       console.log(error);
     }

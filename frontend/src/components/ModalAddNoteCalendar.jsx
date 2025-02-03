@@ -14,7 +14,7 @@ const ModalAddNoteCalendar = ({ orderNumber }) => {
   const { handleOrderNoteChange } = useOrderHandlers({});
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Zapobiega przeładowaniu strony
+    e.preventDefault();
   
     if (!selectedOrder || !orderNote.trim()) {
       console.log("Order or note is missing");

@@ -4,9 +4,7 @@ import { useAuthStore } from "../store/authStore";
 const useOrderHandlers = () => {
   const { updateOrder, deleteOrder, fetchOrders } = useAuthStore();
 
-  // Lokalny stan dla statusów
   const [lockStatus, setLockStatus] = useState({});
-
   const [prioStatus, setPrioStatus] = useState({});
   const [orderNotebookStatus, setOrderNotebookStatus] = useState({});
   const [orderSystemStatus, setOrderSystemStatus] = useState({});
