@@ -46,6 +46,10 @@ const orderSchema = new mongoose.Schema({
     type: String,
     default: "None",
   },
+  orderNote: {
+    type: String,
+    default: "",
+  }
 });
 
 export const Order = mongoose.model("Order", orderSchema);

@@ -2,6 +2,7 @@ import { useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import dayjs from "dayjs";
 
+import ModalDeleteOrder from "../components/ModalDeleteOrder"
 import useOrderHandlers from "../hooks/useOrderHandlers";
 import ModalOrder from "./ModalOrder";
 import { useAuthStore } from "../store/authStore";
@@ -12,6 +13,7 @@ import locker from "../assets/lock2.png";
 import unlocked from "../assets/unlocked.png";
 import exclamation from "../assets/exclamation2.png";
 import exclamationOff from "../assets/exclamationOff.png";
+import LoadingSpinner from "./LoadingSpinner";
 
 const OrderTable = () => {
   const { fetchOrders, orders, isLoading, error } = useAuthStore();
@@ -28,7 +30,6 @@ const OrderTable = () => {
     handleNotebookStatusChange,
     handleSystemStatusChange,
     handleOperatorChange,
-    handleDeleteOrder,
   } = useOrderHandlers({});
 
   // Format date utility
@@ -65,7 +66,7 @@ const OrderTable = () => {
       <div className="border-2 border-black shadow-xl scrollbar-hide">
         {/* Show loading, error, or orders */}
         {isLoading ? (
-          <p>Loading orders...</p>
+          <LoadingSpinner />
         ) : error ? (
           <p>Error: {error}</p>
         ) : orders && orders.length > 0 ? (
@@ -97,7 +98,7 @@ const OrderTable = () => {
                     {/* Order Deadline Column */}
                     <motion.div
                       className="flex lg:flex-1 mr-4 lg:mr-0 cursor-pointer mb-2 lg:mb-0"
-                      whileHover={{ scale: 1.2 }}
+                      whileHover={{ scale: 1.05 }}
                       onClick={() => handleDeadlineChange(order.orderNumber, deadlineStatusChange)}
                     >
                       <span className="font-bold mr-1 lg:hidden">Deadline:</span>
@@ -182,18 +183,13 @@ const OrderTable = () => {
                       whileHover={{ scale: 1.1 }}
                       onClick={() => handlePrioStatusChange(order.orderNumber, prioStatusChange)}
                     >
-                      <img src={getPrioImage(prioStatusChange)} className="hidden lg:flex" />
+                      <img src={getPrioImage(prioStatusChange)} className="hidden lg:flex lg:pr-8 pr-0 cursor-pointer" />
                     </motion.div>
 
                     {/* Delete Order */}
-                    <div>
+                    <div className="flex">
                       <span className="flex-1 lg:hidden font-bold">Delete order:</span>
-                      <button
-                        onClick={() => handleDeleteOrder(order.orderNumber)}
-                        className="bg-red-500 px-2 rounded-lg mb-0 lg:mb-2 hover:scale-105 transition transform ml-4 text-white mx-auto"
-                      >
-                        X
-                      </button>
+                      <ModalDeleteOrder orderNumber={order.orderNumber} />
                     </div>
                   </div>
                 </motion.div>

@@ -6,10 +6,12 @@ const useOrderHandlers = () => {
 
   // Lokalny stan dla statusów
   const [lockStatus, setLockStatus] = useState({});
+
   const [prioStatus, setPrioStatus] = useState({});
   const [orderNotebookStatus, setOrderNotebookStatus] = useState({});
   const [orderSystemStatus, setOrderSystemStatus] = useState({});
   const [operator, setOperator] = useState({});
+  const [orderNote, setOrderNote] = useState({});
   const [deadlineStatus, setDeadlineStatus] = useState({});
 
   const handleStatusChange = async (
@@ -77,6 +79,18 @@ const useOrderHandlers = () => {
     }
   };
 
+  const handleOrderNoteChange = async (orderNumber, currentOrderNote) => {
+    try {
+      await updateOrder(orderNumber, { orderNote: currentOrderNote });
+      setOrderNote((prev) => ({
+        ...prev,
+        [orderNumber]: currentOrderNote
+      }))
+    } catch (error) {
+      console.log("Cant add or change note to the order", error)
+    }
+  }
+
   const handleDeleteOrder = async (orderNumber) => {
     try {
       await deleteOrder(orderNumber);
@@ -101,6 +115,7 @@ const useOrderHandlers = () => {
     handleSystemStatusChange,
     handleOperatorChange,
     handleDeleteOrder,
+    handleOrderNoteChange
   };
 };
 

@@ -240,6 +240,7 @@ export const addOrder = async (req, res) => {
     orderPrio,
     orderDeadline,
     orderOperator,
+    orderNote
   } = req.body;
 
   try {
@@ -262,6 +263,7 @@ export const addOrder = async (req, res) => {
       orderPrio,
       orderDeadline,
       orderOperator,
+      orderNote
     });
 
     await order.save();
