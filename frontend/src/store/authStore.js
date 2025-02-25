@@ -2,10 +2,11 @@ import { create } from "zustand";
 import dayjs from "dayjs";
 import axios from "axios";
 
-const API_URL =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:3000/api/auth"
-    : "/api/auth";
+const API_URL = process.env.REACT_APP_API_URL;
+// const API_URL =
+//   import.meta.env.MODE === "development"
+//     ? "http://localhost:3000/api/auth"
+//     : "/api/auth";
 
 axios.defaults.withCredentials = true;
 
