@@ -1,12 +1,12 @@
 import React from "react";
-import minion from "../assets/minionek.png";
+import minion from "/minionek.png";
 import { motion } from "framer-motion";
 
-import exclamation2 from "../assets/exclamation2.png";
-import exclamationoff from "../assets/exclamationoff.png";
-import fireorange from "../assets/fire.png";
-import firered from "../assets/firered.png";
-import locker from "../assets/lock2.png";
+import exclamation2 from "/exclamation2.png";
+import exclamationoff from "/exclamationoff.png";
+import fireorange from "/fire.png";
+import firered from "/firered.png";
+import locker from "/lock2.png";
 
 const DashboardLegend = () => {
   return (

@@ -5,7 +5,7 @@ import { Mail, Lock, User, Loader } from "lucide-react";
 
 import { useAuthStore } from "../store/authStore.js";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter.jsx";
-import loginImage from "../assets/loginLogo.png";
+import loginImage from "/loginLogo.png";
 import Input from "../components/Input";
 
 const SignupPage = () => {

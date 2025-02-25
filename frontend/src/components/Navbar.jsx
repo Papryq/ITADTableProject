@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
-import logo from "../assets/navbarLogo.png";
+import logo from "../../public/navbarLogo.png";
 
 const Navbar = () => {
   return (

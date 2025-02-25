@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-import minion from "../assets/minionek.png";
+import minion from "/minionek.png";
 
 const FloatingImage = ({ size, top, left, delay }) => {
   const randomY = Math.floor(Math.random() * 37);

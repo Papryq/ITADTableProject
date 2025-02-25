@@ -4,9 +4,9 @@ import { motion } from "framer-motion";
 import { Mail, Lock, Loader } from "lucide-react";
 
 import { useAuthStore } from "../store/authStore";
-import loginImage from "../assets/loginLogo.png";
+import loginImage from "/loginLogo.png";
 import Input from "../components/Input";
-import minion from "../assets/auraminon.png";
+import minion from "/auraminon.png";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");

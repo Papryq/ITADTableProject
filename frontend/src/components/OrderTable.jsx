@@ -6,13 +6,13 @@ import ModalDeleteOrder from "../components/ModalDeleteOrder"
 import useOrderHandlers from "../hooks/useOrderHandlers";
 import ModalOrder from "./ModalOrder";
 import { useAuthStore } from "../store/authStore";
-import fire from "../assets/fire.png";
-import firered from "../assets/firered.png";
-import tick from "../assets/tick.png";
-import locker from "../assets/lock2.png";
-import unlocked from "../assets/unlocked.png";
-import exclamation from "../assets/exclamation2.png";
-import exclamationOff from "../assets/exclamationOff.png";
+import fire from "/fire.png";
+import firered from "/firered.png";
+import tick from "/tick.png";
+import locker from "/lock2.png";
+import unlocked from "/unlocked.png";
+import exclamation from "/exclamation2.png";
+import exclamationOff from "/public/exclamationoff.png";
 import LoadingSpinner from "./LoadingSpinner";
 
 const OrderTable = () => {
