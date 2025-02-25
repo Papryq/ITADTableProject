@@ -114,7 +114,6 @@ const Calendar = () => {
     }, {});
 
     setOrdersForDays(ordersByDate);
-  }, [orders]);
 
   return (
     <motion.div
@@ -247,8 +246,7 @@ const Calendar = () => {
       )}
     </motion.div>
   );
-};
-
+}
 export default Calendar;
 
 // Needs to be updated to fully working
