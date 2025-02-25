@@ -2,11 +2,11 @@ import { create } from "zustand";
 import dayjs from "dayjs";
 import axios from "axios";
 
-// const API_URL = "https://itadtableproject.onrender.com/"
-const API_URL =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:3000/api/auth"
-    : "/api/auth";
+const API_URL = "https://itadtableproject.onrender.com/api/auth"
+// const API_URL =
+//   import.meta.env.MODE === "development"
+//     ? "http://localhost:3000/api/auth"
+//     : "/api/auth";
 
 axios.defaults.withCredentials = true;
 
