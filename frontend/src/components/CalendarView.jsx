@@ -8,7 +8,7 @@ import ModalAddNoteCalendar from "./ModalAddNoteCalendar";
 
 dayjs.locale("pl"); // Set the locale to Polish
 
-const Calendar = () => {
+const CalendarView = () => {
   // State variables
   const { fetchOrders, orders, isLoading, error } = useAuthStore(); // Fetching orders and handling loading and error states
   const [selectedDate, setSelectedDate] = useState(null); // Store the currently selected date
@@ -51,8 +51,9 @@ const Calendar = () => {
   // Previous month days
   const prevMonth = calendarDate.subtract(1, "month");
   const daysInPrevMonth = prevMonth.daysInMonth();
-  const previousMonthDays = Array.from({ length: daysInPreviousMonth }, (_, i) =>
-    prevMonth.date(daysInPrevMonth - daysInPreviousMonth + i + 1)
+  const previousMonthDays = Array.from(
+    { length: daysInPreviousMonth },
+    (_, i) => prevMonth.date(daysInPrevMonth - daysInPreviousMonth + i + 1)
   );
 
   // Current month days
@@ -92,28 +93,29 @@ const Calendar = () => {
   }, [selectedDate, orders]);
 
   // Organize orders by date and store them in a new structure
+  useEffect(() => {
     const ordersByDate = orders.reduce((acc, order) => {
       const date = dayjs(order.orderDateExpiresAt).format("DD/MM/YYYY");
 
       if (!acc[date]) {
-        acc[date] = []; // Initialize an array for the date if it doesn't exist
+        acc[date] = [];
       }
 
-      // Determine the dot color based on the order status
       if (order.orderPrio === true && order.orderLockStatus === false) {
-        acc[date].push("red"); // Priority order (unlocked)
+        acc[date].push("red");
       } else if (order.orderLockStatus === true && order.orderPrio === false) {
-        acc[date].push("gray"); // Locked order (not priority)
+        acc[date].push("gray");
       } else if (order.orderPrio === true && order.orderLockStatus === true) {
-        acc[date].push("gray"); // Priority and locked
+        acc[date].push("gray");
       } else {
-        acc[date].push("orange"); // Normal order
+        acc[date].push("orange");
       }
 
       return acc;
     }, {});
 
     setOrdersForDays(ordersByDate);
+  }, [orders]); // <- Teraz aktualizuje się tylko, gdy zmieniają się `orders`
 
   return (
     <motion.div
@@ -127,7 +129,8 @@ const Calendar = () => {
 
       <div className="flex justify-between items-center">
         <h2 className="flex text-2xl text-red-600 font-bold text-center mb-4">
-          <span className="text-white pr-4">{capitalizedMonth}</span> {currentYear}
+          <span className="text-white pr-4">{capitalizedMonth}</span>{" "}
+          {currentYear}
         </h2>
         <div className="flex gap-2 text-white">
           <button onClick={handlePrevMonth} className="hover:text-gray-400">
@@ -139,7 +142,7 @@ const Calendar = () => {
         </div>
       </div>
 
-      {/* Calendar grid */}
+      {/* CalendarView grid */}
       {isLoading ? (
         <LoadingSpinner />
       ) : error ? (
@@ -165,7 +168,6 @@ const Calendar = () => {
                 className={`p-2 text-center cursor-pointer relative
                  ${isToday ? "bg-blue-400 rounded-full" : ""} 
                  ${isCurrentMonth ? "text-white" : "text-gray-500"}`}
-                 
                 onClick={() => setSelectedDate(dayString)}
               >
                 {day.date()}
@@ -246,7 +248,8 @@ const Calendar = () => {
       )}
     </motion.div>
   );
-}
-export default Calendar;
+};
+
+export default CalendarView;
 
 // Needs to be updated to fully working
