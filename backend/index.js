@@ -12,9 +12,16 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 
-app.use(cors({ 
-  origin: "https://itad-table-project.vercel.app/",  
-  credentials: true 
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
 }));
 app.options("*", cors()); 
 // app.use(cors({ origin: "http://localhost:5173", credentials: true }))
