@@ -2,7 +2,8 @@ import { create } from "zustand";
 import dayjs from "dayjs";
 import axios from "axios";
 
-const API_URL = "https://itadtableproject.onrender.com/api/auth"
+const API_URL = "https://itadtableproject.onrender.com/api/auth";
+console.log("API_URL:", API_URL);
 // const API_URL =
 //   import.meta.env.MODE === "development"
 //     ? "http://localhost:3000/api/auth"
@@ -24,15 +25,16 @@ export const useAuthStore = create((set) => ({
     set({ isLoading: true, error: null });
 
     try {
-      const response = await axios.get(`${API_URL}/orders/`);
+      const response = await axios.get(`${API_URL}/orders/`, {
+        withCredentials: true,
+      });
       set({
         orders: response.data,
         isLoading: false,
       });
-      return response.data.order; // Zwracamy dane zamówienia, jeśli jest potrzebne
     } catch (error) {
       set({
-        error: error.response?.data?.message || "Error fetching order",
+        error: error.response?.data?.message || "Error fetching orders",
         isLoading: false,
       });
       throw error;
@@ -169,20 +171,24 @@ export const useAuthStore = create((set) => ({
     orderNumber,
     orderSystemCount,
     orderNotebookCount,
-    orderDateExpiresAt,
+    orderDateExpiresAt
   ) => {
     set({ isLoading: true, error: null });
 
-    console.log(    
-      "orderNumber:", orderNumber,
-      "orderSystemCount", orderSystemCount,
-      "orderNotebookCount", orderNotebookCount,
-      "oderDateExpiresAt", orderDateExpiresAt,
+    console.log(
+      "orderNumber:",
+      orderNumber,
+      "orderSystemCount",
+      orderSystemCount,
+      "orderNotebookCount",
+      orderNotebookCount,
+      "oderDateExpiresAt",
+      orderDateExpiresAt
     );
 
     // Sprawdzenie i formatowanie daty
     const formattedDate = orderDateExpiresAt
-      ? dayjs(orderDateExpiresAt).format('YYYY-MM-DD') // formatowanie na 'YYYY-MM-DD'
+      ? dayjs(orderDateExpiresAt).format("YYYY-MM-DD") // formatowanie na 'YYYY-MM-DD'
       : ""; // jeśli brak daty, wysyłamy pusty ciąg
 
     try {
@@ -215,7 +221,7 @@ export const useAuthStore = create((set) => ({
         order: null,
         isLoading: false,
       });
-      console.log(`Deleted order with number: ${orderNumber}`)
+      console.log(`Deleted order with number: ${orderNumber}`);
     } catch (error) {
       set({
         error: error.response?.data?.message || "Error deleting order",
