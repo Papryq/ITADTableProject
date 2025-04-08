@@ -71,9 +71,7 @@ function App() {
         <Route
           path="/"
           element={
-            <ProtectedRoute>
               <DashboardPage />
-            </ProtectedRoute>
           }
         />
         <Route
