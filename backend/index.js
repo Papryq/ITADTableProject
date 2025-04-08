@@ -5,6 +5,8 @@ import cors from "cors"
 import { connectDB } from "./db/connectDB.js";
 import authRoutes from "./routes/auth.route.js";
 import cookieParser from "cookie-parser";
+// import { fs } from "fs";
+// import { path } from "path";
 
 dotenv.config();
 
@@ -12,6 +14,17 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 
+// const loadDataFromFile = () => {
+//   try {
+//     const filePath = path.join(__dirname, "dumb-data", "dumb-data.json");
+//     const rawData = fs.readfileSync(filePath, 'utf-8');
+//     const data = JSON.parse(rawData);
+//     return data
+//   } catch (error) {
+//     console.error('Błąd przy wczytywaniu pliku:', err);
+//     return [];
+//   }
+// }
 
 const allowedOrigins = [
   "https://itad-table-project.vercel.app",

@@ -9,14 +9,13 @@ import Input from "../components/Input";
 import minion from "/auraminon.png";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState("");
   const { login, error, isLoading } = useAuthStore();
 
   const handleLogin = async (e) => {
     e.preventDeafult();
-    await login(email, password);
+    await login(name, password);
   };
 
   return (
@@ -45,10 +44,10 @@ const LoginPage = () => {
           <form onSubmit={handleLogin}>
             <Input
               icon={Mail}
-              type="email"
-              placeholder="Email address:"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              placeholder="Login"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
 
             <Input
@@ -85,14 +84,7 @@ const LoginPage = () => {
         </div>
         <div className="px-8 py-4 bg-slate-50 bg-opacity-50 flex justify-center">
           <p className="text-sm text-gray-400">
-            Don`t have an account?{"  "}
-            <Link
-              to="/signup"
-              className="text-teal-700 hover:underline hover:text-teal-300"
-            >
-              Signup
-            </Link>
-            &nbsp;now!
+            ZALOGUJ SIE NIEWOLNIKU
           </p>
         </div>
       </motion.div>

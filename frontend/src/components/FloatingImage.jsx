@@ -6,7 +6,6 @@ const FloatingImage = ({ size, top, left, delay }) => {
   const randomY = Math.floor(Math.random() * 37);
   const randomX = Math.floor(Math.random() * 37);
   const randomRotate = Math.floor(Math.random() * 100) * 2;
-  console.log(randomRotate);
 
   return (
     <motion.img

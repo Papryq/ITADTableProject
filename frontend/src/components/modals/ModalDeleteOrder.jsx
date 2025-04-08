@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Loader } from "lucide-react";
 
-import { useAuthStore } from "../store/authStore.js";
+import { useAuthStore } from "../../store/authStore.js";
 
 const ModalDeleteOrder = ({ orderNumber }) => {
   const [isOpen, setIsOpen] = useState(false);

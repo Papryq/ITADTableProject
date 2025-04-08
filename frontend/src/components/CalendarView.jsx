@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+
 import dayjs from "dayjs";
 import "dayjs/locale/pl"; // Import Polish locale for dayjs
+
 import { useAuthStore } from "../store/authStore"; // Custom hook for fetching orders
 import LoadingSpinner from "./LoadingSpinner";
-import ModalAddNoteCalendar from "./ModalAddNoteCalendar";
+import ModalAddNoteCalendar from "./modals/ModalAddNoteCalendar";
 
 dayjs.locale("pl"); // Set the locale to Polish
 
@@ -21,15 +23,15 @@ const CalendarView = () => {
   // Function to format the date to a readable string (DD/MM/YYYY)
   const formatDate = (date) => dayjs(date).format("DD/MM/YYYY");
 
-  // Funkcje do zmiany miesiąca
+  // Function to change months
   const handlePrevMonth = () => {
     setCalendarDate((prev) => prev.subtract(1, "month"));
-    setSelectedDate(null); // Opcjonalnie czyścimy wybraną datę przy zmianie miesiąca
+    setSelectedDate(null); // Clears chosen date when month being changed
   };
 
   const handleNextMonth = () => {
     setCalendarDate((prev) => prev.add(1, "month"));
-    setSelectedDate(null); // Opcjonalnie czyścimy wybraną datę przy zmianie miesiąca
+    setSelectedDate(null); // Clears chosen date when month being changed
   };
 
   // Get current month and year based on calendarDate
@@ -71,7 +73,19 @@ const CalendarView = () => {
 
   // Fetch orders when the component mounts
   useEffect(() => {
-    fetchOrders();
+    const controller = new AbortController();
+    const fetchOrdersData = async () => {
+      try {
+        await fetchOrders({ signal: controller.signal });
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          console.log("Failed to fetch orders:", error);
+        }
+      }
+    };
+    fetchOrdersData();
+
+    return () => controller.abort(); // Cleanup on component unmount
   }, [fetchOrders]);
 
   // Filter orders based on the selected date
@@ -83,7 +97,7 @@ const CalendarView = () => {
       const filteredNotes = orders.filter((order) => {
         const orderDate = dayjs(order.orderDateExpiresAt);
         return (
-          order.orderNote && // Tylko jeśli notatka istnieje
+          order.orderNote && // Only if notes exist
           (selected.isSame(orderDate, "day") || orderDate.isAfter(today))
         );
       });
@@ -115,14 +129,14 @@ const CalendarView = () => {
     }, {});
 
     setOrdersForDays(ordersByDate);
-  }, [orders]); // <- Teraz aktualizuje się tylko, gdy zmieniają się `orders`
+  }, [orders]); // Updates only if orders change
 
   return (
     <motion.div
       initial={{ opacity: 0, x: -120 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5 }}
-      className="lg:max-w-xl lg:h-screen mx-auto lg:mt-12 mt-20 p-4 bg-black shadow-xl bg-opacity-50"
+      className=" lg:max-w-xl lg:h-screen lg:mx-auto lg:mt-12 mt-24 p-4 bg-black shadow-xl bg-opacity-50"
     >
       {/* Modal adding notes */}
       <ModalAddNoteCalendar />
@@ -133,10 +147,16 @@ const CalendarView = () => {
           {currentYear}
         </h2>
         <div className="flex gap-2 text-white">
-          <button onClick={handlePrevMonth} className="hover:text-gray-400">
+          <button
+            onClick={handlePrevMonth}
+            className="hover:text-gray-400 text-3xl lg:text-xl mr-2 lg:mr-1"
+          >
             {"<"}
           </button>
-          <button onClick={handleNextMonth} className="hover:text-gray-400">
+          <button
+            onClick={handleNextMonth}
+            className="hover:text-gray-400 text-3xl lg:text-xl"
+          >
             {">"}
           </button>
         </div>
@@ -218,22 +238,32 @@ const CalendarView = () => {
               initial={{ opacity: 0, x: -120 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
-              className="mt-6 max-h-96 overflow-y-auto scrollbar-hide"
+              className="mt-6 max-h-96 lg:overflow-y-auto lg:scrollbar-hide"
             >
               <h3 className="text-xl text-white font-semibold text-center mb-4">
-                {dayOfWeek}, {formattedDate} - Notatki
+                {dayOfWeek}, {formattedDate}
               </h3>
               {filteredOrders.length > 0 ? (
-                <ul>
+                <ul className="max-h-[300px] overflow-y-auto lg:scrollbar-hide">
                   {filteredOrders.map((order) => (
                     <li
                       key={order.orderNumber}
-                      className="p-4 mb-2 border-b border-gray-300 text-white"
+                      className={`p-4 mb-2 border-b border-gray-300 text-white`}
                     >
                       <div className="font-bold">
-                        Order Number: {order.orderNumber}
+                        Order Number:{" "}
+                        <span
+                          className={`${
+                            order.orderLockStatus === true
+                              ? "text-gray-500"
+                              : "text-yellow-500"
+                          }`}
+                        >
+                          {" "}
+                          {order.orderNumber}{" "}
+                        </span>
                       </div>
-                      <div className="italic">Notatka: {order.orderNote}</div>
+                      <div className="italic">{order.orderNote}</div>
                     </li>
                   ))}
                 </ul>
@@ -251,5 +281,3 @@ const CalendarView = () => {
 };
 
 export default CalendarView;
-
-// Needs to be updated to fully working

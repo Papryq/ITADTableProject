@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Loader, Mail } from "lucide-react";
-import { useAuthStore } from "../store/authStore";
+import { Loader, NotebookPen } from "lucide-react";
 
-import Input from "./Input";
-import useOrderHandlers from "../hooks/useOrderHandlers";
+import { useAuthStore } from "../../store/authStore";
+import Input from "../Input.jsx";
+import useOrderHandlers from "../../hooks/useOrderHandlers";
 
-const ModalAddNoteCalendar = ({ orderNumber }) => {
+const ModalAddNoteCalendar = () => {
   const [orderNote, setOrderNote] = useState("");
   const [selectedOrder, setSelectedOrder] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -15,15 +15,15 @@ const ModalAddNoteCalendar = ({ orderNumber }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!selectedOrder || !orderNote.trim()) {
       console.log("Order or note is missing");
       return;
     }
-  
+
     try {
       await handleOrderNoteChange(selectedOrder, orderNote);
-      setOrderNote(""); 
+      setOrderNote("");
       setSelectedOrder("");
       toggleModal();
       fetchOrders();
@@ -41,7 +41,7 @@ const ModalAddNoteCalendar = ({ orderNumber }) => {
         onClick={toggleModal}
         className="relative px-2 bg-gray-400 bg-opacity-30 shadow-2xl rounded-md text-md text-white hover:text-white"
       >
-        x
+        Add note
       </motion.button>
 
       {/* Modal */}
@@ -78,7 +78,7 @@ const ModalAddNoteCalendar = ({ orderNumber }) => {
                 ))}
               </select>
               <Input
-                icon={Mail}
+                icon={NotebookPen}
                 type="text"
                 placeholder="Add note..."
                 value={orderNote}

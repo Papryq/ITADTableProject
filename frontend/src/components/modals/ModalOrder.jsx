@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { motion } from "framer-motion";
-import { Mail } from "lucide-react";
+import { Skull, PcCase, Hash } from "lucide-react";
 import dayjs from "dayjs";
 
-import LoadingSpinner from "../components/LoadingSpinner.jsx";
-import { useAuthStore } from "../store/authStore.js";
-import Input from "./Input.jsx";
+import { useAuthStore } from "../../store/authStore.js";
+import LoadingSpinner from "../../components/LoadingSpinner.jsx";
+import Input from "../Input.jsx";
 
 const ModalOrder = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,6 +15,7 @@ const ModalOrder = () => {
   const [orderSystemCount, setOrderSystemCount] = useState("");
   const [orderDateExpiresAt, setOrderDateExpiresAt] = useState(null);
 
+  
   const { addOrder, isLoading, error } = useAuthStore();
 
   const handleSubmit = async () => {
@@ -75,7 +76,7 @@ const ModalOrder = () => {
 
               <form onSubmit={handleSubmit}>
                 <Input
-                  icon={Mail}
+                  icon={Hash}
                   type="text"
                   placeholder="Order number"
                   value={orderNumber}
@@ -84,7 +85,7 @@ const ModalOrder = () => {
 
                 <div className="flex">
                   <Input
-                    icon={Mail}
+                    icon={Skull}
                     type="text"
                     placeholder="Notebook count"
                     value={orderNotebookCount}
@@ -94,7 +95,7 @@ const ModalOrder = () => {
                   <div className="w-8 max-md:invisible"></div>
 
                   <Input
-                    icon={Mail}
+                    icon={PcCase}
                     type="text"
                     placeholder="System count"
                     value={orderSystemCount}
